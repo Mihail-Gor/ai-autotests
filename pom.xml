@@ -27,6 +27,7 @@
         <postgresql.version>42.7.4</postgresql.version>
         <hikaricp.version>5.1.0</hikaricp.version>
         <testcontainers.version>1.20.1</testcontainers.version>
+        <wiremock.version>3.9.1</wiremock.version>
 
         <maven-surefire-plugin.version>3.3.1</maven-surefire-plugin.version>
         <allure-maven.version>2.12.0</allure-maven.version>
@@ -166,6 +167,14 @@
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- WireMock for Service Virtualization & Mocking -->
+        <dependency>
+            <groupId>org.wiremock</groupId>
+            <artifactId>wiremock</artifactId>
+            <version>${wiremock.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

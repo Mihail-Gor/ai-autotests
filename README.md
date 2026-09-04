@@ -5,10 +5,11 @@
 ![JUnit 5](https://img.shields.io/badge/JUnit-5.11.0-blue?logo=junit5)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-blue?logo=postgresql)
 ![Testcontainers](https://img.shields.io/badge/Testcontainers-1.20.1-brightgreen)
+![WireMock](https://img.shields.io/badge/WireMock-3.9.1-red)
 ![Allure Report](https://img.shields.io/badge/Allure-2.29.0-yellow?logo=qameta)
 ![CI/CD](https://img.shields.io/badge/GitHub_Actions-On--Demand-blue?logo=githubactions)
 
-Проект представляет собой образец построения современного фреймворка автоматизации тестирования REST API и интеграционного тестирования баз данных на стеке **Java 21 + REST Assured + JUnit 5 + Allure + PostgreSQL (Testcontainers & HikariCP)**, спроектированный с учетом актуальных Best Practices, применимых в реальных enterprise-проектах.
+Проект представляет собой образец построения современного фреймворка автоматизации тестирования REST API, сервисной виртуализации (мокирования) и интеграционного тестирования баз данных на стеке **Java 21 + REST Assured + JUnit 5 + Allure + PostgreSQL (Testcontainers & HikariCP) + WireMock**, спроектированный с учетом актуальных Best Practices, применимых в реальных enterprise-проектах.
 
 В качестве тестируемого REST сервиса используется публичный API **[DummyJSON](https://dummyjson.com/)**, а для проверки состояния данных и транзакций подключена изолированная база данных **PostgreSQL** на базе **Testcontainers**.
 
@@ -30,6 +31,7 @@
 | **PostgreSQL JDBC 42.7.4** | Драйвер для прямого подключения к базе данных PostgreSQL |
 | **HikariCP 5.1.0** | Высокопроизводительный пул соединений к базе данных |
 | **Testcontainers 1.20.1** | Автоматический подъем герметичного контейнера PostgreSQL 16 в тестах |
+| **WireMock 3.9.1** | Сервисная виртуализация, эмуляция HTTP API, задержек сети и сбоев |
 | **DataFaker 2.3.1** | Генерация реалистичных тестовых данных |
 | **SLF4J + Logback 1.5.7** | Логирование запросов, ответов и системных событий |
 | **GitHub Actions** | On-Demand CI/CD конвейеры, валидация PR и деплой отчетов Allure на GitHub Pages |
@@ -126,7 +128,8 @@ src
     │   └── org
     │       └── example
     │           └── api
-    │               └── tests              # Тестовые классы (BaseTest, ProductCrudTest, DatabaseIntegrationTest)
+    │               ├── mock               # Управление мок-сервером (WireMockManager)
+    │               └── tests              # Тестовые классы (BaseTest, ProductCrudTest, DatabaseIntegrationTest, WireMockIntegrationTest)
     └── resources
         ├── db/
         │   ├── init-schema.sql            # DDL: users, products, orders таблицы
@@ -186,6 +189,15 @@ src
   - `shouldUpdateUserStatusSuccessfully` — изменение статуса пользователя и проверка сохранения состояния.
   - `shouldQueryUserOrdersAndVerifyTotals` — выборка связанных заказов пользователя с расчетом и проверкой итоговой суммы.
   - `shouldCascadeDeleteOrdersWhenUserIsDeleted` — удаление пользователя с проверкой каскадного удаления заказов.
+
+### 4. Service Virtualization & Mocking (`WireMockIntegrationTest`):
+- **Сценарии проверок и эмуляции**:
+  - `shouldMockExternalPaymentGatewaySuccess` — мокирование успешного ответа 200 внешнего платежного шлюза с валидацией JSON-структуры и проверкой количества вызовов.
+  - `shouldMockWebhookDeliveryAndVerifyRequestPayload` — мокирование приема вебхуков (201 Created), сопоставление тела запроса (body matching) и валидация API-ключей в заголовках (`X-Api-Key`).
+  - `shouldSimulateInternalServerError` — эмуляция 500 Internal Server Error для тестирования устойчивости к сбоям третьих систем.
+  - `shouldSimulateRateLimitExceeded` — эмуляция 429 Too Many Requests для проверки обработки лимитов запросов.
+  - `shouldSimulateLatencyAndVerifyResponseTime` — имитация сетевых задержек (fixed delay) с верификацией SLA по времени отклика.
+  - `shouldSimulateStatefulScenarioTransition` — стейт-машина сценариев WireMock: переход состояний от `PENDING` к `COMPLETED` при повторных обращениях.
 
 ---
 
@@ -249,6 +261,9 @@ mvn test -Dgroups=users
 
 # Запуск тестов базы данных (PostgreSQL / Testcontainers):
 mvn test -Dgroups=db
+
+# Запуск тестов моков и сервисной виртуализации (WireMock):
+mvn test -Dgroups=mock
 
 # Запуск регрессионного набора:
 mvn test -Dgroups=regression
