@@ -1,0 +1,48 @@
+name: Security & Dependency Audit
+
+on:
+  pull_request:
+    paths:
+      - 'pom.xml'
+      - '.github/workflows/security-and-dependency-scan.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: security-scan-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  dependency-audit:
+    name: Maven Dependency Security Scan
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java 21 (Temurin)
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+          cache: 'maven'
+
+      - name: Inspect Dependency Tree
+        run: mvn dependency:tree -B
+
+      - name: Check for Dependency Updates
+        run: |
+          mvn versions:display-dependency-updates -B || true
+          mvn versions:display-plugin-updates -B || true
+
+      - name: Publish Security Scan Summary
+        if: always()
+        run: |
+          echo "### 🛡️ Dependency Security & Update Audit" >> $GITHUB_STEP_SUMMARY
+          echo "- **Trigger:** ${{ github.event_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Branch:** \`${{ github.ref_name }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "- **Status:** Completed dependency resolution and version checks" >> $GITHUB_STEP_SUMMARY

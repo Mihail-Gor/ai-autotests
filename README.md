@@ -1,8 +1,16 @@
-# Production-Ready REST API Test Automation Framework
+# Production-Ready REST API & Database Test Automation Framework
 
-Проект представляет собой образец построения современного фреймворка автоматизации тестирования REST API на стеке **Java 21 + REST Assured + JUnit 5 + Allure**, спроектированный с учетом актуальных Best Practices, применимых в реальных коммерческих проектах.
+![Java 21](https://img.shields.io/badge/Java-21-orange?logo=openjdk)
+![REST Assured](https://img.shields.io/badge/REST_Assured-5.5.0-green)
+![JUnit 5](https://img.shields.io/badge/JUnit-5.11.0-blue?logo=junit5)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-blue?logo=postgresql)
+![Testcontainers](https://img.shields.io/badge/Testcontainers-1.20.1-brightgreen)
+![Allure Report](https://img.shields.io/badge/Allure-2.29.0-yellow?logo=qameta)
+![CI/CD](https://img.shields.io/badge/GitHub_Actions-On--Demand-blue?logo=githubactions)
 
-В качестве тестируемого сервиса используется стабильный публичный REST API **[DummyJSON](https://dummyjson.com/)**, предоставляющий полноценный функционал для CRUD операций над сущностями (товары, пользователи и др.).
+Проект представляет собой образец построения современного фреймворка автоматизации тестирования REST API и интеграционного тестирования баз данных на стеке **Java 21 + REST Assured + JUnit 5 + Allure + PostgreSQL (Testcontainers & HikariCP)**, спроектированный с учетом актуальных Best Practices, применимых в реальных enterprise-проектах.
+
+В качестве тестируемого REST сервиса используется публичный API **[DummyJSON](https://dummyjson.com/)**, а для проверки состояния данных и транзакций подключена изолированная база данных **PostgreSQL** на базе **Testcontainers**.
 
 ---
 
@@ -19,8 +27,12 @@
 | **Lombok 1.18.34** | Генерация boilerplate кода (`@Data`, `@Builder`, `@NoArgsConstructor`, `@AllArgsConstructor`) |
 | **Jackson 2.17.2** | JSON сериализация и десериализация (SerDe) с аннотациями игнорирования неизвестных полей |
 | **Owner 1.0.12** | Управление конфигурацией (типобезопасные интерфейсы, чтение из properties, env, cli-аргументов) |
+| **PostgreSQL JDBC 42.7.4** | Драйвер для прямого подключения к базе данных PostgreSQL |
+| **HikariCP 5.1.0** | Высокопроизводительный пул соединений к базе данных |
+| **Testcontainers 1.20.1** | Автоматический подъем герметичного контейнера PostgreSQL 16 в тестах |
 | **DataFaker 2.3.1** | Генерация реалистичных тестовых данных |
 | **SLF4J + Logback 1.5.7** | Логирование запросов, ответов и системных событий |
+| **GitHub Actions** | On-Demand CI/CD конвейеры, валидация PR и деплой отчетов Allure на GitHub Pages |
 | **Maven** | Сборка проекта и управление зависимостями |
 
 ---
@@ -88,6 +100,12 @@
 ## 📁 Структура проекта
 
 ```
+.github/
+└── workflows/
+    ├── pr-checks.yml                     # PR проверки (сборка, smoke suite, step summary)
+    ├── regression-and-reporting.yml      # Регрессия (API + DB) + деплой Allure на GitHub Pages
+    ├── manual-test-run.yml               # Параметризованный запуск по требованию
+    └── security-and-dependency-scan.yml  # Сканирование безопасности и зависимостей Maven
 src
 ├── main
 │   └── java
@@ -98,6 +116,8 @@ src
 │                   ├── clients            # Service API клиенты (BaseClient, ProductClient, UserClient)
 │                   ├── config             # Конфигурация проекта (ProjectConfig, ConfigManager)
 │                   ├── data               # Фабрики генерации тестовых данных (DataFaker)
+│                   ├── database           # База данных (DatabaseManager, TestcontainersManager)
+│                   │   └── models         # Entity Records (UserRecord, ProductRecord, OrderRecord)
 │                   ├── filters            # Фильтры логирования REST Assured
 │                   ├── models             # DTO модели (Product, User, ErrorResponse)
 │                   └── specifications     # Спецификации запросов и ответов REST Assured
@@ -106,11 +126,14 @@ src
     │   └── org
     │       └── example
     │           └── api
-    │               └── tests              # Тестовые классы (BaseTest, ProductCrudTest, UserCrudTest)
+    │               └── tests              # Тестовые классы (BaseTest, ProductCrudTest, DatabaseIntegrationTest)
     └── resources
+        ├── db/
+        │   ├── init-schema.sql            # DDL: users, products, orders таблицы
+        │   └── seed-data.sql              # DML: тестовые начальные данные
         ├── allure.properties              # Настройки генерации Allure
         ├── categories.json                # Категоризация дефектов Allure
-        ├── config.properties              # Параметры тестового окружения
+        ├── config.properties              # Параметры тестового окружения и БД
         ├── junit-platform.properties      # Конфигурация многопоточности JUnit 5
         └── logback-test.xml               # Конфигурация логирования Logback
 ```
@@ -153,6 +176,55 @@ src
   - `DELETE /users/{id}` — Удаление пользователя (проверка флага удаления).
   - `DELETE /users/{id}` (Negative) — Удаление несуществующего пользователя (404).
 
+### 3. Database Testing (`DatabaseIntegrationTest`):
+- **Схема и данные (`init-schema.sql`, `seed-data.sql`)**:
+  - Таблицы: `users`, `products`, `orders` с foreign keys и каскадным удалением.
+- **Сценарии проверок**:
+  - `shouldVerifyDatabaseConnectivityAndSeedData` — проверка подключения и количества записей в таблицах.
+  - `shouldQueryUserByUsernameSuccessfully` — выборка пользователя по username и проверка полей типизированной модели `UserRecord`.
+  - `shouldInsertNewProductAndVerifyRecord` — вставка нового товара, проверка сгенерированного ID и валидация через `ProductRecord`.
+  - `shouldUpdateUserStatusSuccessfully` — изменение статуса пользователя и проверка сохранения состояния.
+  - `shouldQueryUserOrdersAndVerifyTotals` — выборка связанных заказов пользователя с расчетом и проверкой итоговой суммы.
+  - `shouldCascadeDeleteOrdersWhenUserIsDeleted` — удаление пользователя с проверкой каскадного удаления заказов.
+
+---
+
+## 🗄️ Тестирование базы данных (PostgreSQL & Testcontainers)
+
+### 1. Архитектура подключения
+- `DatabaseManager` использует высокопроизводительный пул соединений **HikariCP** с ленивой инициализацией.
+- При включенном `db.use.testcontainers=true` (по умолчанию) запускается легковесный контейнер `postgres:16-alpine`.
+- Для подключения к внешней/локальной БД достаточно выставить `db.use.testcontainers=false` и указать `db.url`, `db.user`, `db.password`.
+
+### 2. Конфигурационные параметры (`config.properties`):
+```properties
+db.url=jdbc:postgresql://localhost:5432/testdb
+db.user=postgres
+db.password=postgres
+db.driver=org.postgresql.Driver
+db.pool.size=10
+db.use.testcontainers=true
+```
+
+---
+
+## 🚀 On-Demand CI/CD Конвейеры (GitHub Actions)
+
+В проекте реализованы модульные воркфлоу, запускаемые строго **по требованию (on-demand)**:
+
+1. **`pr-checks.yml` (PR Validation & Smoke Tests)**:
+   - Срабатывает при создании/обновлении Pull Request в `main`/`master`.
+   - Запускает компиляцию и дымовые тесты (`-Dgroups="smoke"`).
+   - Формирует и публикует Markdown-сводку в GitHub Step Summary.
+2. **`regression-and-reporting.yml` (Regression Suite & Allure Reporting)**:
+   - Срабатывает при пуше в `main` или по ручному вызову (`workflow_dispatch`).
+   - Запускает полный набор тестов (API + DB с Testcontainers).
+   - Подтягивает историю предыдущих прогонов из ветки `gh-pages`, генерирует свежий Allure-отчет и деплоит его на GitHub Pages.
+3. **`manual-test-run.yml` (Parameterized On-Demand Test Run)**:
+   - Запуск вручную через интерфейс GitHub Actions с параметрами: окружение (`staging`, `dev`, `prod`), теги JUnit (`regression`, `smoke`, `db`, `products`, `users`), число потоков параллелизации и базовый URL.
+4. **`security-and-dependency-scan.yml` (Security & Dependency Audit)**:
+   - Запуск по требованию и при изменении `pom.xml` для проверки дерева зависимостей и поиска обновлений.
+
 ---
 
 ## 🚀 Запуск автотестов
@@ -174,6 +246,9 @@ mvn test -Dgroups=products
 
 # Запуск только тестов пользователей:
 mvn test -Dgroups=users
+
+# Запуск тестов базы данных (PostgreSQL / Testcontainers):
+mvn test -Dgroups=db
 
 # Запуск регрессионного набора:
 mvn test -Dgroups=regression

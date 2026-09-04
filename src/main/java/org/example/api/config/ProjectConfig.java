@@ -24,4 +24,28 @@ public interface ProjectConfig extends Config {
     @Key("api.timeout.ms")
     @DefaultValue("10000")
     long timeoutMs();
+
+    @Key("db.url")
+    @DefaultValue("jdbc:postgresql://localhost:5432/testdb")
+    String dbUrl();
+
+    @Key("db.user")
+    @DefaultValue("postgres")
+    String dbUser();
+
+    @Key("db.password")
+    @DefaultValue("postgres")
+    String dbPassword();
+
+    @Key("db.driver")
+    @DefaultValue("org.postgresql.Driver")
+    String dbDriver();
+
+    @Key("db.pool.size")
+    @DefaultValue("10")
+    int dbPoolSize();
+
+    @Key("db.use.testcontainers")
+    @DefaultValue("true")
+    boolean dbUseTestcontainers();
 }

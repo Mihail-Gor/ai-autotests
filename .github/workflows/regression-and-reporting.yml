@@ -1,0 +1,99 @@
+name: Regression Suite & Allure Reporting
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+    inputs:
+      tags:
+        description: 'JUnit 5 Tag expression (e.g. regression, db, products, users)'
+        required: false
+        default: 'regression'
+        type: string
+
+concurrency:
+  group: regression-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  run-regression:
+    name: Run Full Regression Suite
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java 21 (Temurin)
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+          cache: 'maven'
+
+      - name: Execute Full Test Suite (API + DB)
+        run: |
+          TAGS="${{ github.event.inputs.tags || 'regression' }}"
+          echo "Running tests with tag expression: $TAGS"
+          mvn clean test -B -Dgroups="$TAGS"
+
+      - name: Load Allure Report History from gh-pages
+        if: always()
+        uses: actions/checkout@v4
+        continue-on-error: true
+        with:
+          ref: gh-pages
+          path: gh-pages-branch
+
+      - name: Setup Allure History
+        if: always()
+        run: |
+          mkdir -p target/allure-results
+          if [ -d "gh-pages-branch/history" ]; then
+            echo "Copying previous Allure history to target/allure-results/history..."
+            cp -r gh-pages-branch/history target/allure-results/
+          fi
+
+      - name: Generate Allure Report
+        if: always()
+        run: mvn allure:report -B
+
+      - name: Publish Test Summary
+        if: always()
+        run: |
+          echo "### 📊 Regression Run Summary" >> $GITHUB_STEP_SUMMARY
+          echo "- **Trigger:** ${{ github.event_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Branch:** \`${{ github.ref_name }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "- **Commit:** \`${{ github.sha }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "- **Tags:** \`${{ github.event.inputs.tags || 'regression' }}\`" >> $GITHUB_STEP_SUMMARY
+
+      - name: Deploy Allure Report to GitHub Pages
+        if: always() && github.ref_name == 'main'
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: target/site/allure-maven-plugin
+          keep_files: false
+
+      - name: Archive Allure Results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-results
+          path: target/allure-results/
+          retention-days: 14
+
+      - name: Archive Allure HTML Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-html-report
+          path: target/site/allure-maven-plugin/
+          retention-days: 14

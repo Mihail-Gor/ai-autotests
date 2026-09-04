@@ -1,0 +1,55 @@
+name: PR Validation & Smoke Tests
+
+on:
+  pull_request:
+    branches: [ main, master ]
+    types: [ opened, synchronize, reopened ]
+
+concurrency:
+  group: pr-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  validate-and-smoke:
+    name: Build & Smoke Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java 21 (Temurin)
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+          cache: 'maven'
+
+      - name: Compile and Verify Sources
+        run: mvn clean test-compile -B
+
+      - name: Execute Smoke Test Suite
+        run: mvn test -B -Dgroups="smoke"
+
+      - name: Publish Test Summary
+        if: always()
+        run: |
+          echo "### 🚀 Pull Request Validation Summary" >> $GITHUB_STEP_SUMMARY
+          echo "- **Event:** ${{ github.event_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Branch:** \`${{ github.head_ref }}\` -> \`${{ github.base_ref }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "- **Commit:** \`${{ github.sha }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "- **Java Version:** 21 (Temurin)" >> $GITHUB_STEP_SUMMARY
+          echo "- **Test Filter:** \`smoke\` suite" >> $GITHUB_STEP_SUMMARY
+
+      - name: Archive Surefire Test Reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: surefire-smoke-reports
+          path: target/surefire-reports/
+          retention-days: 7

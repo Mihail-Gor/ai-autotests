@@ -1,0 +1,114 @@
+name: Parameterized On-Demand Test Run
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Target Environment'
+        required: true
+        default: 'staging'
+        type: choice
+        options:
+          - staging
+          - dev
+          - prod
+      test_tags:
+        description: 'JUnit 5 Tag Filter'
+        required: true
+        default: 'regression'
+        type: choice
+        options:
+          - regression
+          - smoke
+          - db
+          - products
+          - users
+      threads:
+        description: 'Parallel Test Execution Threads'
+        required: false
+        default: '4'
+        type: choice
+        options:
+          - '1'
+          - '2'
+          - '4'
+          - '8'
+      base_url:
+        description: 'Base API URL Override (Leave empty for default)'
+        required: false
+        default: 'https://dummyjson.com'
+        type: string
+      publish_report:
+        description: 'Generate Allure Report Artifact'
+        required: false
+        default: true
+        type: boolean
+
+concurrency:
+  group: manual-run-${{ github.ref }}-${{ github.actor }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  execute-tests:
+    name: Run On-Demand Tests (${{ inputs.test_tags }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java 21 (Temurin)
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+          cache: 'maven'
+
+      - name: Execute Targeted Tests
+        run: |
+          echo "Executing on-demand run:"
+          echo "  - Environment: ${{ inputs.environment }}"
+          echo "  - Tags: ${{ inputs.test_tags }}"
+          echo "  - Threads: ${{ inputs.threads }}"
+          echo "  - Base URL: ${{ inputs.base_url }}"
+          
+          mvn clean test -B \
+            -Dgroups="${{ inputs.test_tags }}" \
+            -Dbase.url="${{ inputs.base_url }}" \
+            -Djunit.jupiter.execution.parallel.config.fixed.parallelism="${{ inputs.threads }}"
+
+      - name: Generate Allure Report
+        if: always() && inputs.publish_report
+        run: mvn allure:report -B
+
+      - name: Publish Test Summary
+        if: always()
+        run: |
+          echo "### 🎯 On-Demand Manual Test Run Summary" >> $GITHUB_STEP_SUMMARY
+          echo "- **Triggered by:** @${{ github.actor }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Environment:** \`${{ inputs.environment }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "- **Tag Filter:** \`${{ inputs.test_tags }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "- **Base URL:** \`${{ inputs.base_url }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "- **Threads:** \`${{ inputs.threads }}\`" >> $GITHUB_STEP_SUMMARY
+
+      - name: Archive Test Results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: manual-run-results-${{ inputs.test_tags }}
+          path: |
+            target/surefire-reports/
+            target/allure-results/
+          retention-days: 7
+
+      - name: Archive Allure HTML Report
+        if: always() && inputs.publish_report
+        uses: actions/upload-artifact@v4
+        with:
+          name: manual-allure-report-${{ inputs.test_tags }}
+          path: target/site/allure-maven-plugin/
+          retention-days: 7
