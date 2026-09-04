@@ -1,0 +1,20 @@
+[
+  {
+    "name": "Ignored tests",
+    "matchedStatuses": ["skipped"]
+  },
+  {
+    "name": "Infrastructure / Network problems",
+    "matchedStatuses": ["broken"],
+    "messageRegex": ".*(ConnectException|SocketTimeoutException|UnknownHostException).*"
+  },
+  {
+    "name": "Assertion / Business logic failures",
+    "matchedStatuses": ["failed"]
+  },
+  {
+    "name": "API 5xx Server Errors",
+    "matchedStatuses": ["failed", "broken"],
+    "messageRegex": ".*5\\d{2}.*"
+  }
+]
