@@ -1,0 +1,71 @@
+<div>POST to https://dummyjson.com/products/add</div>
+
+    <h4>Body</h4>
+    <div>
+    <pre class="preformated-text">
+{
+    &quot;title&quot;: &quot;Synergistic Paper Chair&quot;,
+    &quot;description&quot;: &quot;Amet quisquam ipsam veniam cupiditate veniam aliquid occaecati dolor nemo error exercitationem necessitatibus.&quot;,
+    &quot;category&quot;: &quot;Garden, Grocery &amp; Tools&quot;,
+    &quot;price&quot;: 413.38,
+    &quot;discountPercentage&quot;: 14.36,
+    &quot;rating&quot;: 2.71,
+    &quot;stock&quot;: 85,
+    &quot;tags&quot;: [
+        &quot;health &amp; home&quot;,
+        &quot;featured&quot;
+    ],
+    &quot;brand&quot;: &quot;Yundt-Yundt&quot;,
+    &quot;sku&quot;: &quot;SKU-1E285880&quot;,
+    &quot;weight&quot;: 2.5,
+    &quot;dimensions&quot;: {
+        &quot;width&quot;: 37.3,
+        &quot;height&quot;: 45.2,
+        &quot;depth&quot;: 7.1
+    },
+    &quot;warrantyInformation&quot;: &quot;1 year warranty&quot;,
+    &quot;shippingInformation&quot;: &quot;Ships in 2-3 days&quot;,
+    &quot;availabilityStatus&quot;: &quot;In Stock&quot;,
+    &quot;returnPolicy&quot;: &quot;30 days return policy&quot;,
+    &quot;minimumOrderQuantity&quot;: 1
+}    </pre>
+    </div>
+
+    <h4>Headers</h4>
+    <div>
+            <div>Accept: application/json, application/javascript, text/javascript, text/json</div>
+            <div>Content-Type: application/json</div>
+    </div>
+
+
+
+    <h4>Curl</h4>
+    <div>
+        curl -v -X POST &#39;https://dummyjson.com/products/add&#39; -H &#39;Accept: application/json, application/javascript, text/javascript, text/json&#39; -H &#39;Content-Type: application/json&#39; -d &#39;{
+    &quot;title&quot;: &quot;Synergistic Paper Chair&quot;,
+    &quot;description&quot;: &quot;Amet quisquam ipsam veniam cupiditate veniam aliquid occaecati dolor nemo error exercitationem necessitatibus.&quot;,
+    &quot;category&quot;: &quot;Garden, Grocery &amp; Tools&quot;,
+    &quot;price&quot;: 413.38,
+    &quot;discountPercentage&quot;: 14.36,
+    &quot;rating&quot;: 2.71,
+    &quot;stock&quot;: 85,
+    &quot;tags&quot;: [
+        &quot;health &amp; home&quot;,
+        &quot;featured&quot;
+    ],
+    &quot;brand&quot;: &quot;Yundt-Yundt&quot;,
+    &quot;sku&quot;: &quot;SKU-1E285880&quot;,
+    &quot;weight&quot;: 2.5,
+    &quot;dimensions&quot;: {
+        &quot;width&quot;: 37.3,
+        &quot;height&quot;: 45.2,
+        &quot;depth&quot;: 7.1
+    },
+    &quot;warrantyInformation&quot;: &quot;1 year warranty&quot;,
+    &quot;shippingInformation&quot;: &quot;Ships in 2-3 days&quot;,
+    &quot;availabilityStatus&quot;: &quot;In Stock&quot;,
+    &quot;returnPolicy&quot;: &quot;30 days return policy&quot;,
+    &quot;minimumOrderQuantity&quot;: 1
+}&#39;
+    </div>
+

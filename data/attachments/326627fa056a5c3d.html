@@ -1,0 +1,31 @@
+<div>PUT to https://dummyjson.com/products/1</div>
+
+    <h4>Body</h4>
+    <div>
+    <pre class="preformated-text">
+{
+    &quot;title&quot;: &quot;Brand New Updated Phone&quot;,
+    &quot;description&quot;: &quot;Upgraded technical specifications and features&quot;,
+    &quot;category&quot;: &quot;smartphones&quot;,
+    &quot;price&quot;: 599.99
+}    </pre>
+    </div>
+
+    <h4>Headers</h4>
+    <div>
+            <div>Accept: application/json, application/javascript, text/javascript, text/json</div>
+            <div>Content-Type: application/json</div>
+    </div>
+
+
+
+    <h4>Curl</h4>
+    <div>
+        curl -v -X PUT &#39;https://dummyjson.com/products/1&#39; -H &#39;Accept: application/json, application/javascript, text/javascript, text/json&#39; -H &#39;Content-Type: application/json&#39; -d &#39;{
+    &quot;title&quot;: &quot;Brand New Updated Phone&quot;,
+    &quot;description&quot;: &quot;Upgraded technical specifications and features&quot;,
+    &quot;category&quot;: &quot;smartphones&quot;,
+    &quot;price&quot;: 599.99
+}&#39;
+    </div>
+
