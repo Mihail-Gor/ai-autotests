@@ -1,5 +1,6 @@
 package org.example.ui.tests;
 
+import io.qameta.allure.AllureId;
 import io.qameta.allure.Description;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
@@ -7,6 +8,12 @@ import io.qameta.allure.Owner;
 import io.qameta.allure.Severity;
 import io.qameta.allure.SeverityLevel;
 import io.qameta.allure.Story;
+import io.qameta.allure.TmsLink;
+import org.example.common.annotations.Component;
+import org.example.common.annotations.JiraIssue;
+import org.example.common.annotations.Layer;
+import org.example.common.annotations.Layers;
+import org.example.common.annotations.Microservice;
 import org.example.ui.data.SortOption;
 import org.example.ui.data.UserCredentials;
 import org.example.ui.pages.InventoryPage;
@@ -23,6 +30,9 @@ import static org.example.ui.assertions.InventoryAssert.assertThatInventory;
 
 @Epic("UI Automation")
 @Feature("Product Catalog & Inventory")
+@Layer(Layers.UI)
+@Microservice("frontend-web-application")
+@Component("Catalog")
 @Owner("QA Automation Team")
 @Tag("ui")
 public class InventoryUiTest extends BaseUiTest {
@@ -35,6 +45,9 @@ public class InventoryUiTest extends BaseUiTest {
     }
 
     @Test
+    @AllureId("2010")
+    @TmsLink("TMS-2010")
+    @JiraIssue("CAT-101")
     @Story("Catalog Browsing")
     @Severity(SeverityLevel.BLOCKER)
     @Tag("smoke")
@@ -53,6 +66,9 @@ public class InventoryUiTest extends BaseUiTest {
     }
 
     @ParameterizedTest(name = "Sort products by: {0}")
+    @AllureId("2011")
+    @TmsLink("TMS-2011")
+    @JiraIssue("CAT-102")
     @Story("Catalog Sorting")
     @Severity(SeverityLevel.CRITICAL)
     @Tag("regression")
@@ -71,6 +87,9 @@ public class InventoryUiTest extends BaseUiTest {
     }
 
     @Test
+    @AllureId("2012")
+    @TmsLink("TMS-2012")
+    @JiraIssue("CAT-103")
     @Story("Product Details")
     @Severity(SeverityLevel.NORMAL)
     @Tag("regression")

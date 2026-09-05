@@ -1,5 +1,6 @@
 package org.example.ui.tests;
 
+import io.qameta.allure.AllureId;
 import io.qameta.allure.Description;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
@@ -7,6 +8,12 @@ import io.qameta.allure.Owner;
 import io.qameta.allure.Severity;
 import io.qameta.allure.SeverityLevel;
 import io.qameta.allure.Story;
+import io.qameta.allure.TmsLink;
+import org.example.common.annotations.Component;
+import org.example.common.annotations.JiraIssue;
+import org.example.common.annotations.Layer;
+import org.example.common.annotations.Layers;
+import org.example.common.annotations.Microservice;
 import org.example.ui.data.UserCredentials;
 import org.example.ui.pages.CartPage;
 import org.example.ui.pages.InventoryPage;
@@ -21,6 +28,9 @@ import static org.example.ui.assertions.InventoryAssert.assertThatInventory;
 
 @Epic("UI Automation")
 @Feature("Shopping Cart")
+@Layer(Layers.UI)
+@Microservice("frontend-web-application")
+@Component("Cart")
 @Owner("QA Automation Team")
 @Tag("ui")
 public class CartUiTest extends BaseUiTest {
@@ -33,6 +43,9 @@ public class CartUiTest extends BaseUiTest {
     }
 
     @Test
+    @AllureId("2020")
+    @TmsLink("TMS-2020")
+    @JiraIssue("CART-101")
     @Story("Add to Cart")
     @Severity(SeverityLevel.BLOCKER)
     @Tag("smoke")
@@ -54,6 +67,9 @@ public class CartUiTest extends BaseUiTest {
     }
 
     @Test
+    @AllureId("2021")
+    @TmsLink("TMS-2021")
+    @JiraIssue("CART-102")
     @Story("Add to Cart")
     @Severity(SeverityLevel.CRITICAL)
     @Tag("regression")
@@ -77,6 +93,9 @@ public class CartUiTest extends BaseUiTest {
     }
 
     @Test
+    @AllureId("2022")
+    @TmsLink("TMS-2022")
+    @JiraIssue("CART-103")
     @Story("Remove from Cart")
     @Severity(SeverityLevel.CRITICAL)
     @Tag("regression")
@@ -93,6 +112,9 @@ public class CartUiTest extends BaseUiTest {
     }
 
     @Test
+    @AllureId("2023")
+    @TmsLink("TMS-2023")
+    @JiraIssue("CART-104")
     @Story("Remove from Cart")
     @Severity(SeverityLevel.CRITICAL)
     @Tag("regression")
@@ -117,6 +139,9 @@ public class CartUiTest extends BaseUiTest {
     }
 
     @Test
+    @AllureId("2024")
+    @TmsLink("TMS-2024")
+    @JiraIssue("CART-105")
     @Story("Cart Navigation")
     @Severity(SeverityLevel.NORMAL)
     @Tag("regression")

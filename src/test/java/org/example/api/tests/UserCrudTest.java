@@ -1,5 +1,6 @@
 package org.example.api.tests;
 
+import io.qameta.allure.AllureId;
 import io.qameta.allure.Description;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
@@ -7,11 +8,17 @@ import io.qameta.allure.Owner;
 import io.qameta.allure.Severity;
 import io.qameta.allure.SeverityLevel;
 import io.qameta.allure.Story;
+import io.qameta.allure.TmsLink;
 import io.restassured.response.Response;
 import org.example.api.data.UserDataFactory;
 import org.example.api.models.user.UserDto;
 import org.example.api.models.user.UsersResponseDto;
 import org.example.api.specifications.ResponseSpecs;
+import org.example.common.annotations.Component;
+import org.example.common.annotations.JiraIssue;
+import org.example.common.annotations.Layer;
+import org.example.common.annotations.Layers;
+import org.example.common.annotations.Microservice;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Tag;
@@ -24,6 +31,9 @@ import static org.example.api.assertions.UserAssert.assertThatUser;
 
 @Epic("DummyJSON User API")
 @Feature("Users Management")
+@Layer(Layers.API)
+@Microservice("user-management-service")
+@Component("Users")
 @Owner("QA Automation Engineer")
 @Tag("regression")
 @Tag("users")
@@ -36,6 +46,9 @@ public class UserCrudTest extends BaseTest {
     class CreateOperations {
 
         @Test
+        @AllureId("1020")
+        @TmsLink("TMS-1020")
+        @JiraIssue("USER-101")
         @Severity(SeverityLevel.BLOCKER)
         @DisplayName("POST /users/add - Successfully create user with full profile")
         @Description("Verifies creating a user with personal info, address, company and credentials.")
@@ -61,6 +74,9 @@ public class UserCrudTest extends BaseTest {
                 "John, Doe, john.doe.test@example.com",
                 "Alice, Smith, alice.smith.test@example.com"
         })
+        @AllureId("1021")
+        @TmsLink("TMS-1021")
+        @JiraIssue("USER-101")
         @Severity(SeverityLevel.CRITICAL)
         @DisplayName("POST /users/add - Successfully create user with minimal details (Parameterized)")
         @Description("Verifies user creation with minimal required fields.")
@@ -83,6 +99,9 @@ public class UserCrudTest extends BaseTest {
     class ReadOperations {
 
         @Test
+        @AllureId("1022")
+        @TmsLink("TMS-1022")
+        @JiraIssue("USER-102")
         @Severity(SeverityLevel.BLOCKER)
         @DisplayName("GET /users/{id} - Successfully get user by ID")
         @Description("Verifies retrieving single user by ID with all detailed properties.")
@@ -103,6 +122,9 @@ public class UserCrudTest extends BaseTest {
         }
 
         @Test
+        @AllureId("1023")
+        @TmsLink("TMS-1023")
+        @JiraIssue("USER-102")
         @Severity(SeverityLevel.CRITICAL)
         @DisplayName("GET /users - Get paginated users list")
         @Description("Verifies retrieving users list with limit and skip query parameters.")
@@ -122,6 +144,9 @@ public class UserCrudTest extends BaseTest {
         }
 
         @Test
+        @AllureId("1024")
+        @TmsLink("TMS-1024")
+        @JiraIssue("USER-102")
         @Severity(SeverityLevel.NORMAL)
         @DisplayName("GET /users/{id} - Return 404 for non-existing user")
         @Description("Verifies that requesting a non-existent user returns 404 Not Found.")
@@ -140,6 +165,9 @@ public class UserCrudTest extends BaseTest {
     class UpdateOperations {
 
         @Test
+        @AllureId("1025")
+        @TmsLink("TMS-1025")
+        @JiraIssue("USER-103")
         @Severity(SeverityLevel.CRITICAL)
         @DisplayName("PUT /users/{id} - Fully update user information")
         @Description("Verifies updating user data via PUT request.")
@@ -163,6 +191,9 @@ public class UserCrudTest extends BaseTest {
         }
 
         @Test
+        @AllureId("1026")
+        @TmsLink("TMS-1026")
+        @JiraIssue("USER-103")
         @Severity(SeverityLevel.NORMAL)
         @DisplayName("PATCH /users/{id} - Partially update user email")
         @Description("Verifies partial update of user fields via PATCH request.")
@@ -192,6 +223,9 @@ public class UserCrudTest extends BaseTest {
     class DeleteOperations {
 
         @Test
+        @AllureId("1027")
+        @TmsLink("TMS-1027")
+        @JiraIssue("USER-104")
         @Severity(SeverityLevel.CRITICAL)
         @DisplayName("DELETE /users/{id} - Successfully delete user")
         @Description("Verifies deleting user and checking isDeleted and deletedOn flags.")
@@ -207,6 +241,9 @@ public class UserCrudTest extends BaseTest {
         }
 
         @Test
+        @AllureId("1028")
+        @TmsLink("TMS-1028")
+        @JiraIssue("USER-104")
         @Severity(SeverityLevel.NORMAL)
         @DisplayName("DELETE /users/{id} - Return 404 when deleting non-existing user")
         @Description("Verifies 404 response on deleting non-existent user.")

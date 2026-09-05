@@ -249,9 +249,75 @@ mvn test -Dtest=CheckoutE2ETest
 
 ---
 
+## 📊 Allure TestOps & Отчетность
+
+### 1. В чем отличие Allure TestOps от обычного Allure Report?
+
+| Характеристика | Обычный Allure Report | **Allure TestOps (TMS)** |
+|---|---|---|
+| **Назначение** | Статический HTML-отчет после завершения прогона | Полноценная **Test Management System (TMS)** нового поколения |
+| **Test Cases as Code** | ❌ Нет (только результаты факта запуска) | ✅ **Сквозная синхронизация тест-кейсов из кода в TMS** |
+| **Управление тестами** | ❌ Нет | ✅ Единое пространство для **ручных и автотестов** |
+| **Аналитика и Flaky** | Ограниченная история в рамках одного стенда | ✅ Автоматическая детекция **Flaky**, Mute, Defect Triaging |
+| **Live Streaming** | ❌ Отчет доступен только после завершения всего билда | ✅ **Live execution streaming** (шаги появляются в реальном времени) |
+| **Двусторонняя интеграция** | Ссылки в HTML | ✅ Синхронизация с **Jira / Issue Tracker / CI/CD** |
+
+---
+
+### 2. Как метаданные Allure TestOps выглядят в тестах
+
+В проект внедрен полный спектр метаданных для TestOps:
+
+```java
+@Epic("DummyJSON E-Commerce API")
+@Feature("Products Management")
+@Layer(Layers.API)                        // Тестовый слой (API, UI, Database, Mock)
+@Microservice("product-catalog-service")   // Привязка к микросервису/компоненту
+@Component("Products")                     // Функциональный модуль
+@Owner("QA Automation Engineer")           // Ответственный инженер
+public class ProductCrudTest extends BaseTest {
+
+    @Test
+    @AllureId("1001")                      // Уникальный постоянный ID тест-кейса в Allure TestOps
+    @TmsLink("TMS-1001")                   // Прямая ссылка на задачу в TMS
+    @JiraIssue("SHOP-201")                 // Связка со User Story в Jira
+    @Story("Create Product")
+    @Severity(SeverityLevel.BLOCKER)
+    @DisplayName("POST /products/add - Successfully create product with full payload")
+    void shouldCreateProductWithFullPayload() {
+        ...
+    }
+}
+```
+
+#### Ключевые аннотации TestOps:
+- **`@AllureId("id")`**: Идентификатор тест-кейса в TestOps. При переименовании метода или перемещении класса история и статистика теста не теряются.
+- **`@Layer(Layers.UI)` / `@Layer(Layers.API)` / `@Layer(Layers.DATABASE)`**: Разделение тестов по уровням пирамиды тестирования для построения метрик покрытия.
+- **`@Microservice("...")`**: Тегирование сервиса для селективного запуска регрессии по затронутым сервисам.
+- **`@JiraIssue("...")`**: Автоматическое связывание результатов тестирования с тикетами в Jira.
+- **`@Step` с аттачами**: TestOps автоматически парсит шаги и обновляет сценарий тест-кейса в интерфейсе TMS.
+
+---
+
+### 3. Запуск и Live Streaming в CI/CD (`allurectl`)
+
+Для интеграции с Allure TestOps в CI/CD настроен рабочий процесс `.github/workflows/allure-testops.yml`.
+
+Запуск тестов оборачивается в CLI-утилиту `allurectl watch`:
+```bash
+allurectl watch --results target/allure-results -- mvn test -Dgroups="regression"
+```
+
+Переменные окружения для подключения:
+- `ALLURE_ENDPOINT` — адрес вашего сервера Allure TestOps (например, `https://testops.your-company.com`).
+- `ALLURE_TOKEN` — API-токен авторизации сервисной учетной записи.
+- `ALLURE_PROJECT_ID` — ID проекта в Allure TestOps.
+
+---
+
 ## 📊 Формирование и просмотр отчетов Allure
 
-### 1. Генерация HTML-отчета:
+### 1. Генерация локального HTML-отчета:
 ```bash
 mvn allure:report
 ```

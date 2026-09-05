@@ -1,14 +1,21 @@
 package org.example.api.tests;
 
+import io.qameta.allure.AllureId;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Owner;
 import io.qameta.allure.Severity;
 import io.qameta.allure.SeverityLevel;
 import io.qameta.allure.Story;
+import io.qameta.allure.TmsLink;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
+import org.example.common.annotations.Component;
+import org.example.common.annotations.JiraIssue;
+import org.example.common.annotations.Layer;
+import org.example.common.annotations.Layers;
+import org.example.common.annotations.Microservice;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -23,6 +30,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @Epic("Service Virtualization")
 @Feature("WireMock HTTP Mocking")
+@Layer(Layers.MOCK)
+@Microservice("external-payment-and-webhook-gateway")
+@Component("WireMock Virtualization")
 @Owner("QA Automation Team")
 @Tag("mock")
 @Tag("regression")
@@ -36,6 +46,9 @@ public class WireMockIntegrationTest extends BaseTest {
     }
 
     @Test
+    @AllureId("1040")
+    @TmsLink("TMS-1040")
+    @JiraIssue("PAY-201")
     @Severity(SeverityLevel.BLOCKER)
     @Story("External Service Mocking")
     @DisplayName("Mock External Payment Gateway Successful 200 Response")
@@ -71,6 +84,9 @@ public class WireMockIntegrationTest extends BaseTest {
     }
 
     @Test
+    @AllureId("1041")
+    @TmsLink("TMS-1041")
+    @JiraIssue("PAY-202")
     @Severity(SeverityLevel.CRITICAL)
     @Story("Request Verification & Header Validation")
     @DisplayName("Mock External Webhook Delivery and Verify Headers and Body")
@@ -111,6 +127,9 @@ public class WireMockIntegrationTest extends BaseTest {
     }
 
     @Test
+    @AllureId("1042")
+    @TmsLink("TMS-1042")
+    @JiraIssue("PAY-203")
     @Severity(SeverityLevel.CRITICAL)
     @Story("Fault & Error Simulation")
     @DisplayName("Simulate 500 Internal Server Error from Third-Party Service")
@@ -139,6 +158,9 @@ public class WireMockIntegrationTest extends BaseTest {
     }
 
     @Test
+    @AllureId("1043")
+    @TmsLink("TMS-1043")
+    @JiraIssue("PAY-204")
     @Severity(SeverityLevel.NORMAL)
     @Story("Rate Limiting Simulation")
     @DisplayName("Simulate 429 Too Many Requests with Retry-After Header")
@@ -166,6 +188,9 @@ public class WireMockIntegrationTest extends BaseTest {
     }
 
     @Test
+    @AllureId("1044")
+    @TmsLink("TMS-1044")
+    @JiraIssue("PAY-205")
     @Severity(SeverityLevel.NORMAL)
     @Story("Latency & Delay Simulation")
     @DisplayName("Simulate Network Latency with Fixed Delay and Validate Response Timing")
@@ -198,6 +223,9 @@ public class WireMockIntegrationTest extends BaseTest {
     }
 
     @Test
+    @AllureId("1045")
+    @TmsLink("TMS-1045")
+    @JiraIssue("PAY-206")
     @Severity(SeverityLevel.CRITICAL)
     @Story("Stateful Scenario Mocking")
     @DisplayName("Simulate Order Processing State Machine (PENDING -> COMPLETED)")

@@ -1,5 +1,6 @@
 package org.example.ui.tests;
 
+import io.qameta.allure.AllureId;
 import io.qameta.allure.Description;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
@@ -7,6 +8,12 @@ import io.qameta.allure.Owner;
 import io.qameta.allure.Severity;
 import io.qameta.allure.SeverityLevel;
 import io.qameta.allure.Story;
+import io.qameta.allure.TmsLink;
+import org.example.common.annotations.Component;
+import org.example.common.annotations.JiraIssue;
+import org.example.common.annotations.Layer;
+import org.example.common.annotations.Layers;
+import org.example.common.annotations.Microservice;
 import org.example.ui.data.UserCredentials;
 import org.example.ui.pages.InventoryPage;
 import org.example.ui.pages.LoginPage;
@@ -20,11 +27,17 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @Epic("UI Automation")
 @Feature("Authentication & Authorization")
+@Layer(Layers.UI)
+@Microservice("frontend-web-application")
+@Component("Authentication")
 @Owner("QA Automation Team")
 @Tag("ui")
 public class LoginUiTest extends BaseUiTest {
 
     @Test
+    @AllureId("2001")
+    @TmsLink("TMS-2001")
+    @JiraIssue("AUTH-101")
     @Story("User Login")
     @Severity(SeverityLevel.BLOCKER)
     @Tag("smoke")
@@ -50,6 +63,9 @@ public class LoginUiTest extends BaseUiTest {
     }
 
     @Test
+    @AllureId("2002")
+    @TmsLink("TMS-2002")
+    @JiraIssue("AUTH-102")
     @Story("User Login")
     @Severity(SeverityLevel.CRITICAL)
     @Tag("regression")
@@ -70,6 +86,9 @@ public class LoginUiTest extends BaseUiTest {
     }
 
     @ParameterizedTest(name = "Login with invalid username: \"{0}\", password: \"{1}\"")
+    @AllureId("2003")
+    @TmsLink("TMS-2003")
+    @JiraIssue("AUTH-103")
     @Story("User Login")
     @Severity(SeverityLevel.NORMAL)
     @Tag("regression")
@@ -94,6 +113,9 @@ public class LoginUiTest extends BaseUiTest {
     }
 
     @Test
+    @AllureId("2004")
+    @TmsLink("TMS-2004")
+    @JiraIssue("AUTH-104")
     @Story("User Login")
     @Severity(SeverityLevel.NORMAL)
     @Tag("regression")
@@ -110,6 +132,9 @@ public class LoginUiTest extends BaseUiTest {
     }
 
     @Test
+    @AllureId("2005")
+    @TmsLink("TMS-2005")
+    @JiraIssue("AUTH-105")
     @Story("User Logout")
     @Severity(SeverityLevel.CRITICAL)
     @Tag("smoke")

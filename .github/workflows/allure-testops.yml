@@ -1,0 +1,83 @@
+name: Allure TestOps Real-Time Integration
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+    inputs:
+      test_layer:
+        description: 'Test Layer to execute (API, UI, Database, Mock, all)'
+        required: true
+        default: 'all'
+        type: choice
+        options:
+          - all
+          - API
+          - UI
+          - Database
+          - Mock
+      test_tags:
+        description: 'JUnit 5 Tag Filter'
+        required: false
+        default: 'regression'
+        type: string
+
+concurrency:
+  group: allure-testops-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  allure-testops-run:
+    name: Execute Tests & Upload to Allure TestOps
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    env:
+      ALLURE_ENDPOINT: ${{ secrets.ALLURE_ENDPOINT }}
+      ALLURE_TOKEN: ${{ secrets.ALLURE_TOKEN }}
+      ALLURE_PROJECT_ID: ${{ secrets.ALLURE_PROJECT_ID }}
+      ALLURE_RESULTS: target/allure-results
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java 21 (Temurin)
+        uses: actions/setup-java@v5
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+          cache: 'maven'
+
+      - name: Install Playwright Browsers (for UI layer)
+        run: |
+          mvn test-compile -B
+          mvn exec:java -e -D exec.mainClass=com.microsoft.playwright.CLI -D exec.args="install --with-deps chromium" || true
+
+      - name: Install Allure TestOps CLI (allurectl)
+        uses: allure-framework/setup-allurectl@v1
+        with:
+          allure-endpoint: ${{ secrets.ALLURE_ENDPOINT }}
+          allure-token: ${{ secrets.ALLURE_TOKEN }}
+          allure-project-id: ${{ secrets.ALLURE_PROJECT_ID }}
+
+      - name: Execute Tests with Allure TestOps Watcher
+        run: |
+          echo "Starting Allure TestOps live test execution..."
+          TAG_FILTER="${{ github.event.inputs.test_tags || 'regression' }}"
+          
+          # Wrap Maven test run with allurectl watch for live streaming of results and step status to TestOps
+          allurectl watch --results target/allure-results -- mvn test -B -Dgroups="$TAG_FILTER"
+
+      - name: Publish Step Summary
+        if: always()
+        run: |
+          echo "### 🚀 Allure TestOps Execution Completed" >> $GITHUB_STEP_SUMMARY
+          echo "- **Project ID:** \`${{ env.ALLURE_PROJECT_ID }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "- **Endpoint:** \`${{ env.ALLURE_ENDPOINT }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "- **Branch:** \`${{ github.ref_name }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "- **Commit:** \`${{ github.sha }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "- **Tag Filter:** \`${{ github.event.inputs.test_tags || 'regression' }}\`" >> $GITHUB_STEP_SUMMARY

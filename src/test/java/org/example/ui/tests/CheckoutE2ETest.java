@@ -1,5 +1,6 @@
 package org.example.ui.tests;
 
+import io.qameta.allure.AllureId;
 import io.qameta.allure.Description;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
@@ -7,6 +8,12 @@ import io.qameta.allure.Owner;
 import io.qameta.allure.Severity;
 import io.qameta.allure.SeverityLevel;
 import io.qameta.allure.Story;
+import io.qameta.allure.TmsLink;
+import org.example.common.annotations.Component;
+import org.example.common.annotations.JiraIssue;
+import org.example.common.annotations.Layer;
+import org.example.common.annotations.Layers;
+import org.example.common.annotations.Microservice;
 import org.example.ui.data.CheckoutInfo;
 import org.example.ui.data.UserCredentials;
 import org.example.ui.pages.CartPage;
@@ -29,6 +36,9 @@ import static org.assertj.core.api.Assertions.within;
 
 @Epic("UI Automation")
 @Feature("Order Checkout E2E")
+@Layer(Layers.UI)
+@Microservice("frontend-web-application")
+@Component("Checkout")
 @Owner("QA Automation Team")
 @Tag("ui")
 public class CheckoutE2ETest extends BaseUiTest {
@@ -41,6 +51,9 @@ public class CheckoutE2ETest extends BaseUiTest {
     }
 
     @Test
+    @AllureId("2030")
+    @TmsLink("TMS-2030")
+    @JiraIssue("CHECKOUT-101")
     @Story("End-to-End Order Placement")
     @Severity(SeverityLevel.BLOCKER)
     @Tag("smoke")
@@ -103,6 +116,9 @@ public class CheckoutE2ETest extends BaseUiTest {
     }
 
     @ParameterizedTest(name = "Validation error when missing: {0}")
+    @AllureId("2031")
+    @TmsLink("TMS-2031")
+    @JiraIssue("CHECKOUT-102")
     @Story("Checkout Validation")
     @Severity(SeverityLevel.CRITICAL)
     @Tag("regression")
@@ -135,6 +151,9 @@ public class CheckoutE2ETest extends BaseUiTest {
     }
 
     @Test
+    @AllureId("2032")
+    @TmsLink("TMS-2032")
+    @JiraIssue("CHECKOUT-103")
     @Story("Checkout Navigation")
     @Severity(SeverityLevel.NORMAL)
     @Tag("regression")
@@ -152,6 +171,9 @@ public class CheckoutE2ETest extends BaseUiTest {
     }
 
     @Test
+    @AllureId("2033")
+    @TmsLink("TMS-2033")
+    @JiraIssue("CHECKOUT-104")
     @Story("Checkout Navigation")
     @Severity(SeverityLevel.NORMAL)
     @Tag("regression")
