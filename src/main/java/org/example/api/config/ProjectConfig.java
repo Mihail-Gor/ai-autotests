@@ -48,4 +48,41 @@ public interface ProjectConfig extends Config {
     @Key("db.use.testcontainers")
     @DefaultValue("true")
     boolean dbUseTestcontainers();
+
+    // UI (Playwright) Configuration
+    @Key("ui.base.url")
+    @DefaultValue("https://www.saucedemo.com")
+    String uiBaseUrl();
+
+    @Key("ui.browser")
+    @DefaultValue("chromium")
+    String uiBrowser();
+
+    @Key("ui.headless")
+    @DefaultValue("true")
+    boolean uiHeadless();
+
+    @Key("ui.slow.mo")
+    @DefaultValue("0")
+    double uiSlowMo();
+
+    @Key("ui.timeout.ms")
+    @DefaultValue("15000")
+    double uiTimeoutMs();
+
+    @Key("ui.tracing.enabled")
+    @DefaultValue("true")
+    boolean uiTracingEnabled();
+
+    @Key("ui.video.enabled")
+    @DefaultValue("false")
+    boolean uiVideoEnabled();
+
+    @Key("ui.screenshot.on.failure")
+    @DefaultValue("true")
+    boolean uiScreenshotOnFailure();
+
+    @Key("ui.page.source.on.failure")
+    @DefaultValue("true")
+    boolean uiPageSourceOnFailure();
 }

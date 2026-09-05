@@ -1,6 +1,7 @@
-# Production-Ready REST API & Database Test Automation Framework
+# Production-Ready Full-Stack Test Automation Framework (API, UI & Database)
 
 ![Java 21](https://img.shields.io/badge/Java-21-orange?logo=openjdk)
+![Playwright](https://img.shields.io/badge/Playwright-1.49.0-brightgreen?logo=playwright)
 ![REST Assured](https://img.shields.io/badge/REST_Assured-5.5.0-green)
 ![JUnit 5](https://img.shields.io/badge/JUnit-5.11.0-blue?logo=junit5)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-blue?logo=postgresql)
@@ -9,9 +10,21 @@
 ![Allure Report](https://img.shields.io/badge/Allure-2.29.0-yellow?logo=qameta)
 ![CI/CD](https://img.shields.io/badge/GitHub_Actions-On--Demand-blue?logo=githubactions)
 
-Проект представляет собой образец построения современного фреймворка автоматизации тестирования REST API, сервисной виртуализации (мокирования) и интеграционного тестирования баз данных на стеке **Java 21 + REST Assured + JUnit 5 + Allure + PostgreSQL (Testcontainers & HikariCP) + WireMock**, спроектированный с учетом актуальных Best Practices, применимых в реальных enterprise-проектах.
+Проект представляет собой образец построения современного масштабируемого фреймворка автоматизации тестирования **UI (Web E2E)**, **REST API**, **сервисной виртуализации (мокирования)** и **интеграционного тестирования баз данных** на стеке:
+**Java 21 + Playwright + REST Assured + JUnit 5 + Allure + PostgreSQL (Testcontainers & HikariCP) + WireMock + Owner**, спроектированный с учетом актуальных Best Practices и готовый для переиспользования в Enterprise-проектах.
 
-В качестве тестируемого REST сервиса используется публичный API **[DummyJSON](https://dummyjson.com/)**, а для проверки состояния данных и транзакций подключена изолированная база данных **PostgreSQL** на базе **Testcontainers**.
+---
+
+## 🎯 Тестовые полигоны и стенды
+
+1. **UI Web E2E Тестирование**: **[SauceDemo (Swag Labs)](https://www.saucedemo.com/)**
+   - Общепризнанный эталонный тестовый полигон для UI автотестов.
+   - Покрывает реальные сценарии: многопользовательская авторизация (различные персоны: standard, locked_out, problem, error), каталог товаров, сортировка по имени и цене, карточка товара, добавление/удаление из корзины с отслеживанием бейджей, многошаговый чекаут (Checkout Step One -> Overview с расчетом налогов и итоговой стоимости -> Complete) и обработка валидационных ошибок.
+   - Все элементы имеют стабильные `data-test` атрибуты (Best Practice для Playwright).
+2. **REST API Тестирование**: **[DummyJSON](https://dummyjson.com/)**
+   - Полнофункциональный публичный REST-сервис с ресурсами `products` и `users`, пагинацией, поиском, валидациями и CRUD-операциями.
+3. **Database & Transaction Testing**: Изолированный контейнер **PostgreSQL 16** на базе **Testcontainers**.
+4. **Service Virtualization**: **WireMock** для эмуляции внешних шлюзов, задержек сети, сбоев 500/429 и стейт-машин.
 
 ---
 
@@ -20,16 +33,17 @@
 | Технология | Назначение |
 |---|---|
 | **Java 21 (LTS)** | Язык разработки |
+| **Playwright 1.49.0** | Высокопроизводительный современный движок для автоматизации браузеров (Chromium, Firefox, WebKit) |
 | **REST Assured 5.5.0** | Клиент и библиотека для выполнения и валидации HTTP-запросов |
-| **JUnit 5 (Jupiter) 5.11.0** | Тестовый фреймворк (параллелизация, вложенные структуры `@Nested`, параметризация) |
-| **Allure Report 2.29.0** | Фреймворк для формирования наглядных интерактивных HTML-отчетов с аттачами запросов/ответов |
+| **JUnit 5 (Jupiter) 5.11.0** | Тестовый фреймворк (многопоточный параллельный запуск, параметризация, extensions) |
+| **Allure Report 2.29.0** | Интерактивные HTML-отчеты с аттачами запросов/ответов, скриншотов, HTML-исходников и Playwright Trace |
 | **AspectJ Weaver 1.9.22** | Байткод-инструментация для Allure `@Step` шагов |
 | **AssertJ 3.26.3** | Fluent assertions библиотека и кастомные типобезопасные ассёрты |
 | **Lombok 1.18.34** | Генерация boilerplate кода (`@Data`, `@Builder`, `@NoArgsConstructor`, `@AllArgsConstructor`) |
-| **Jackson 2.17.2** | JSON сериализация и десериализация (SerDe) с аннотациями игнорирования неизвестных полей |
-| **Owner 1.0.12** | Управление конфигурацией (типобезопасные интерфейсы, чтение из properties, env, cli-аргументов) |
-| **PostgreSQL JDBC 42.7.4** | Драйвер для прямого подключения к базе данных PostgreSQL |
-| **HikariCP 5.1.0** | Высокопроизводительный пул соединений к базе данных |
+| **Jackson 2.17.2** | JSON сериализация и десериализация (SerDe) |
+| **Owner 1.0.12** | Управление конфигурацией (типобезопасные интерфейсы, properties, env, cli-аргументы) |
+| **PostgreSQL JDBC 42.7.4** | Драйвер подключения к БД PostgreSQL |
+| **HikariCP 5.1.0** | Высокопроизводительный пул соединений к БД |
 | **Testcontainers 1.20.1** | Автоматический подъем герметичного контейнера PostgreSQL 16 в тестах |
 | **WireMock 3.9.1** | Сервисная виртуализация, эмуляция HTTP API, задержек сети и сбоев |
 | **DataFaker 2.3.1** | Генерация реалистичных тестовых данных |
@@ -41,61 +55,51 @@
 
 ## 🏛 Архитектурные паттерны и Best Practices
 
-Фреймворк построен по принципу **многослойной архитектуры (Layered Architecture)** и паттерна **Service Object / API Client**:
+### 1. UI Автоматизация (Playwright Best Practices):
+- **Page Object Model (POM) & Component Object Model (COM)**:
+  - Четкое разделение страниц (`LoginPage`, `InventoryPage`, `ProductDetailsPage`, `CartPage`, `CheckoutStepOnePage`, `CheckoutStepTwoPage`, `CheckoutCompletePage`) и переиспользуемых компонентов (`HeaderComponent`, `SidebarMenuComponent`, `ProductCardComponent`).
+- **Thread-Safety и Параллельное выполнение**:
+  - `PlaywrightDriverManager` хранит `Playwright`, `Browser`, `BrowserContext`, `Page` в `ThreadLocal`, обеспечивая 100% изоляцию тестов при параллельном выполнении JUnit 5.
+- **Автоматический сбор артефактов при падениях (`PlaywrightAllureExtension`)**:
+  - При падении теста в Allure автоматически прикрепляются:
+    1. Полностраничный скриншот страницы (`Failure Screenshot`).
+    2. Полный HTML-код страницы в момент сбоя (`Page HTML Source`).
+    3. Полный архив трассировки Playwright (`Playwright Trace - trace.zip`) для пошагового воспроизведения в `playwright show-trace`.
+- **User-Facing & Robust Locators**:
+  - Использование стабильных атрибутов `data-test` (`page.locator("[data-test='...']")`) и селекторов `getByTestId`, исключающих хрупкость верстки.
+- **Кастомные Fluent Assertions**:
+  - `InventoryAssert.assertThatInventory(page).hasProductCount(6).hasProductsSortedByPriceAscending();`
+  - `CartAssert.assertThatCart(page).hasItemCount(2).containsProduct("Sauce Labs Backpack");`
 
 ```
-                  ┌───────────────────────────────┐
-                  │       Test Suites             │
-                  │ (ProductCrudTest, UserCrud...)│
-                  └───────────────┬───────────────┘
-                                  │ Uses
-                  ┌───────────────▼───────────────┐
-                  │    Service Clients (Layer)    │
-                  │ (ProductClient, UserClient)   │
-                  └───────┬───────────────┬───────┘
-                          │               │
-            Uses Specs &  │               │ SerDe via Jackson
-            Allure Steps  │               │
-     ┌────────────────────▼─────┐   ┌─────▼─────────────────────────┐
-     │      Specifications      │   │          Models (DTO)         │
-     │ RequestSpecs/ResponseSpecs│  │  (ProductDto, UserDto, etc.)  │
-     └────────────────────┬─────┘   └─────▲─────────────────────────┘
-                          │               │
-                          │ Calls         │ Generates
-     ┌────────────────────▼─────┐   ┌─────┴─────────────────────────┐
-     │       REST Assured       │   │         Data Factories        │
-     │      (HTTP Engine)       │   │  (ProductDataFactory, etc.)   │
-     └──────────────────────────┘   └───────────────────────────────┘
+                  ┌─────────────────────────────────────────┐
+                  │              UI Test Suites             │
+                  │   (LoginUiTest, CheckoutE2ETest, ...)   │
+                  └────────────────────┬────────────────────┘
+                                       │ Uses
+                  ┌────────────────────▼────────────────────┐
+                  │               Page Objects              │
+                  │     (LoginPage, InventoryPage, ...)     │
+                  └───────┬─────────────────────────┬───────┘
+                          │                         │ Aggregates
+                          │ Uses                    ▼
+                          │             ┌───────────────────────┐
+                          │             │       Components      │
+                          │             │ (Header, Sidebar, ...)│
+                          │             └───────────┬───────────┘
+                          │                         │
+                          ▼                         ▼
+                  ┌─────────────────────────────────────────┐
+                  │          Playwright Driver Manager      │
+                  │  (ThreadLocal Context, Page, Browser)   │
+                  └────────────────────┬────────────────────┘
+                                       │
+                                       ▼
+                  ┌─────────────────────────────────────────┐
+                  │       Playwright Browser Engine         │
+                  │      (Chromium / Firefox / WebKit)      │
+                  └─────────────────────────────────────────┘
 ```
-
-### Ключевые архитектурные решения:
-
-1. **Разделение ответственности (Separation of Concerns)**:
-   - Тесты содержат исключительно бизнес-логику сценариев и проверки, не завися от URL, эндпоинтов или параметров сериализации.
-   - HTTP-вызовы инкапсулированы внутри классов-клиентов (`ProductClient`, `UserClient`).
-   - Тестовые данные генерируются фабриками (`ProductDataFactory`, `UserDataFactory`).
-
-2. **Спецификации запросов и ответов (`RequestSpecification`, `ResponseSpecification`)**:
-   - `RequestSpecs.defaultRequestSpec()` централизованно задает Base URI, Content-Type, Accept, Allure-фильтр и логирование.
-   - `ResponseSpecs` содержит переиспользуемые шаблоны проверок статус-кодов (`statusOk()`, `statusCreated()`, `statusNotFound()`, `entityDeleted()`).
-
-3. **Типизированные DTO (Data Transfer Objects)**:
-   - Все тела запросов и ответов представлены Java-классами с аннотациями Jackson (`@JsonIgnoreProperties(ignoreUnknown = true)`, `@JsonInclude(NON_NULL)`) и Lombok (`@Builder(toBuilder = true)`).
-   - Исключена хрупкая ручная конкатенация JSON-строк.
-
-4. **Полная интеграция с Allure**:
-   - Фильтр `AllureRestAssured` автоматически прикрепляет все отправленные запросы, заголовки, параметры и полученные ответы в отчет Allure в виде интерактивных HTML-вкладок.
-   - Все методы клиентов и валидаций снабжены аннотацией `@Step("...")`.
-   - Тесты размечены аннотациями `@Epic`, `@Feature`, `@Story`, `@Owner`, `@Severity`, `@DisplayName`, `@Description`, `@Tag`.
-
-5. **Кастомные Fluent Assertions (AssertJ)**:
-   - Созданы `ProductAssert` и `UserAssert`, позволяющие писать декларативные, понятные проверки в стиле `assertThatProduct(product).hasTitle("...").hasPrice(10.0);`.
-
-6. **Гибкая конфигурация (Owner)**:
-   - Все параметры (URL окружения, таймауты, флаги логирования) вынесены в `config.properties` и могут быть переопределены через аргументы командной строки (`-Dbase.url=...`) или переменные окружения.
-
-7. **Параллельное выполнение**:
-   - В `junit-platform.properties` настроено параллельное выполнение тестовых классов и методов (`concurrent`), что ускоряет прогон регрессионного набора.
 
 ---
 
@@ -104,174 +108,143 @@
 ```
 .github/
 └── workflows/
-    ├── pr-checks.yml                     # PR проверки (сборка, smoke suite, step summary)
-    ├── regression-and-reporting.yml      # Регрессия (API + DB) + деплой Allure на GitHub Pages
-    ├── manual-test-run.yml               # Параметризованный запуск по требованию
+    ├── pr-checks.yml                     # PR проверки (сборка, smoke suite, Playwright browser install)
+    ├── regression-and-reporting.yml      # Регрессия (API + DB + UI) + деплой Allure на GitHub Pages
+    ├── manual-test-run.yml               # Параметризованный запуск по требованию с выбором браузера и тегов
     └── security-and-dependency-scan.yml  # Сканирование безопасности и зависимостей Maven
 src
 ├── main
 │   └── java
 │       └── org
 │           └── example
-│               └── api
-│                   ├── assertions         # Кастомные AssertJ ассёрты (ProductAssert, UserAssert)
-│                   ├── clients            # Service API клиенты (BaseClient, ProductClient, UserClient)
-│                   ├── config             # Конфигурация проекта (ProjectConfig, ConfigManager)
-│                   ├── data               # Фабрики генерации тестовых данных (DataFaker)
-│                   ├── database           # База данных (DatabaseManager, TestcontainersManager)
-│                   │   └── models         # Entity Records (UserRecord, ProductRecord, OrderRecord)
-│                   ├── filters            # Фильтры логирования REST Assured
-│                   ├── models             # DTO модели (Product, User, ErrorResponse)
-│                   └── specifications     # Спецификации запросов и ответов REST Assured
+│               ├── api
+│               │   ├── assertions         # Кастомные AssertJ ассёрты (ProductAssert, UserAssert)
+│               │   ├── clients            # Service API клиенты (BaseClient, ProductClient, UserClient)
+│               │   ├── config             # Конфигурация проекта (ProjectConfig, ConfigManager)
+│               │   ├── data               # Фабрики генерации данных (DataFaker)
+│               │   ├── database           # База данных (DatabaseManager, TestcontainersManager)
+│               │   │   └── models         # Entity Records (UserRecord, ProductRecord, OrderRecord)
+│               │   ├── filters            # Фильтры логирования REST Assured
+│               │   ├── models             # DTO модели (Product, User, ErrorResponse)
+│               │   └── specifications     # Спецификации запросов и ответов REST Assured
+│               └── ui
+│                   ├── assertions         # Кастомные AssertJ ассёрты UI (InventoryAssert, CartAssert)
+│                   ├── components         # UI компоненты (HeaderComponent, SidebarMenuComponent, ProductCardComponent)
+│                   ├── core               # Драйвер Playwright, фабрика браузеров (BrowserFactory, PlaywrightDriverManager)
+│                   ├── data               # Данные UI тестов (UserCredentials, SortOption, CheckoutInfo)
+│                   └── pages              # Page Objects (LoginPage, InventoryPage, CartPage, Checkout pages)
 └── test
     ├── java
     │   └── org
     │       └── example
-    │           └── api
-    │               ├── mock               # Управление мок-сервером (WireMockManager)
-    │               └── tests              # Тестовые классы (BaseTest, ProductCrudTest, DatabaseIntegrationTest, WireMockIntegrationTest)
+    │           ├── api
+    │           │   ├── mock               # Управление мок-сервером (WireMockManager)
+    │           │   └── tests              # API Тесты (ProductCrudTest, UserCrudTest, DatabaseIntegrationTest, WireMockIntegrationTest)
+    │           └── ui
+    │               ├── core               # Test Watcher & Allure Extensions (PlaywrightAllureExtension)
+    │               └── tests              # UI Тесты (LoginUiTest, InventoryUiTest, CartUiTest, CheckoutE2ETest)
     └── resources
         ├── db/
         │   ├── init-schema.sql            # DDL: users, products, orders таблицы
         │   └── seed-data.sql              # DML: тестовые начальные данные
         ├── allure.properties              # Настройки генерации Allure
         ├── categories.json                # Категоризация дефектов Allure
-        ├── config.properties              # Параметры тестового окружения и БД
-        ├── junit-platform.properties      # Конфигурация многопоточности JUnit 5
+        ├── config.properties              # Параметры окружения (API, DB, Playwright UI)
+        ├── junit-platform.properties      # Конфигурация параллелизма JUnit 5
         └── logback-test.xml               # Конфигурация логирования Logback
 ```
 
 ---
 
-## 🧪 Покрытие автотестами (CRUD Operations)
+## 🧪 Наборы автотестов
 
-Фреймворк содержит автотесты для двух независимых сервисов с позитивными, негативными и параметризованными проверками:
+### 1. UI Web Tests (`org.example.ui.tests`):
+- **`LoginUiTest`**:
+  - Успешный вход пользователя (`standard_user`) и переход в каталог.
+  - Проверка блокировки учетной записи (`locked_out_user`) с валидацией баннера ошибки.
+  - Параметризованные проверки некорректных учетных данных и пустых полей.
+  - Полный сценарий логаута через боковое меню и возврат на страницу входа.
+- **`InventoryUiTest`**:
+  - Отображение полного каталога (6 товаров с описанием, ценами и кнопками).
+  - Сортировка каталога по всем направлениям (A-Z, Z-A, Price Low-High, Price High-Low).
+  - Навигация в карточку товара и возврат назад в каталог.
+- **`CartUiTest`**:
+  - Добавление одного и нескольких товаров в корзину с проверкой бейджа счетчика.
+  - Удаление товаров из каталога и непосредственно со страницы корзины.
+  - Навигация «Continue Shopping» обратно в каталог.
+- **`CheckoutE2ETest`**:
+  - Полный сквозной End-to-End процесс покупки: авторизация -> добавление в корзину -> переход в чекаут -> ввод данных покупателя (с генерацией через DataFaker) -> проверка налогов, сабтотала и итоговой суммы -> подтверждение заказа -> проверка экрана завершения заказа.
+  - Валидационные проверки обязательных полей формы чекаута (First Name, Last Name, Postal Code).
+  - Отмена оформления на шагах Step 1 и Step 2 с возвратом состояния.
 
-### 1. Products Management (`ProductCrudTest`):
-- **Create (POST)**:
-  - `POST /products/add` — Создание товара с полным набором атрибутов (цена, габариты, скидка, бренд, описание).
-  - `POST /products/add` (Parameterized) — Создание товара с минимальным набором данных.
-- **Read (GET)**:
-  - `GET /products/{id}` — Получение существующего товара по ID.
-  - `GET /products` — Получение пагинированного списка с параметрами `limit` и `skip`.
-  - `GET /products/search` — Поиск товаров по ключевому слову (`?q=phone`).
-  - `GET /products/{id}` (Negative) — Запрос несуществующего ID (проверка 404 Not Found и тела ошибки).
-- **Update (PUT / PATCH)**:
-  - `PUT /products/{id}` — Полное обновление сущности.
-  - `PATCH /products/{id}` — Частичное обновление конкретного поля (title).
-  - `PUT /products/{id}` (Negative) — Обновление несуществующего товара (404).
-- **Delete (DELETE)**:
-  - `DELETE /products/{id}` — Успешное удаление товара (проверка `isDeleted: true` и метки времени).
-  - `DELETE /products/{id}` (Negative) — Удаление несуществующего товара (404).
+### 2. REST API Tests (`ProductCrudTest`, `UserCrudTest`):
+- Полное CRUD покрытие: `POST`, `GET`, `PUT`, `PATCH`, `DELETE` с позитивными, негативными (404/400) и параметризованными проверками.
 
-### 2. Users Management (`UserCrudTest`):
-- **Create (POST)**:
-  - `POST /users/add` — Создание пользователя с полным профилем (адрес, компания, учетные данные).
-  - `POST /users/add` (Parameterized) — Создание пользователя с базовыми полями.
-- **Read (GET)**:
-  - `GET /users/{id}` — Получение профиля пользователя по ID.
-  - `GET /users` — Получение списка пользователей с пагинацией.
-  - `GET /users/{id}` (Negative) — Запрос несуществующего пользователя (404).
-- **Update (PUT / PATCH)**:
-  - `PUT /users/{id}` — Полное обновление данных пользователя.
-  - `PATCH /users/{id}` — Частичное обновление email.
-- **Delete (DELETE)**:
-  - `DELETE /users/{id}` — Удаление пользователя (проверка флага удаления).
-  - `DELETE /users/{id}` (Negative) — Удаление несуществующего пользователя (404).
+### 3. Database Integration Tests (`DatabaseIntegrationTest`):
+- Проверка подключений, транзакций, вставки, обновления и каскадного удаления в PostgreSQL с Testcontainers.
 
-### 3. Database Testing (`DatabaseIntegrationTest`):
-- **Схема и данные (`init-schema.sql`, `seed-data.sql`)**:
-  - Таблицы: `users`, `products`, `orders` с foreign keys и каскадным удалением.
-- **Сценарии проверок**:
-  - `shouldVerifyDatabaseConnectivityAndSeedData` — проверка подключения и количества записей в таблицах.
-  - `shouldQueryUserByUsernameSuccessfully` — выборка пользователя по username и проверка полей типизированной модели `UserRecord`.
-  - `shouldInsertNewProductAndVerifyRecord` — вставка нового товара, проверка сгенерированного ID и валидация через `ProductRecord`.
-  - `shouldUpdateUserStatusSuccessfully` — изменение статуса пользователя и проверка сохранения состояния.
-  - `shouldQueryUserOrdersAndVerifyTotals` — выборка связанных заказов пользователя с расчетом и проверкой итоговой суммы.
-  - `shouldCascadeDeleteOrdersWhenUserIsDeleted` — удаление пользователя с проверкой каскадного удаления заказов.
-
-### 4. Service Virtualization & Mocking (`WireMockIntegrationTest`):
-- **Сценарии проверок и эмуляции**:
-  - `shouldMockExternalPaymentGatewaySuccess` — мокирование успешного ответа 200 внешнего платежного шлюза с валидацией JSON-структуры и проверкой количества вызовов.
-  - `shouldMockWebhookDeliveryAndVerifyRequestPayload` — мокирование приема вебхуков (201 Created), сопоставление тела запроса (body matching) и валидация API-ключей в заголовках (`X-Api-Key`).
-  - `shouldSimulateInternalServerError` — эмуляция 500 Internal Server Error для тестирования устойчивости к сбоям третьих систем.
-  - `shouldSimulateRateLimitExceeded` — эмуляция 429 Too Many Requests для проверки обработки лимитов запросов.
-  - `shouldSimulateLatencyAndVerifyResponseTime` — имитация сетевых задержек (fixed delay) с верификацией SLA по времени отклика.
-  - `shouldSimulateStatefulScenarioTransition` — стейт-машина сценариев WireMock: переход состояний от `PENDING` к `COMPLETED` при повторных обращениях.
+### 4. Service Virtualization (`WireMockIntegrationTest`):
+- Эмуляция внешних платежных шлюзов, вебхуков, ошибок 500, Rate Limiting 429, задержек сети и стейт-машин.
 
 ---
 
-## 🗄️ Тестирование базы данных (PostgreSQL & Testcontainers)
+## ⚙️ Конфигурация окружения (`config.properties`)
 
-### 1. Архитектура подключения
-- `DatabaseManager` использует высокопроизводительный пул соединений **HikariCP** с ленивой инициализацией.
-- При включенном `db.use.testcontainers=true` (по умолчанию) запускается легковесный контейнер `postgres:16-alpine`.
-- Для подключения к внешней/локальной БД достаточно выставить `db.use.testcontainers=false` и указать `db.url`, `db.user`, `db.password`.
-
-### 2. Конфигурационные параметры (`config.properties`):
 ```properties
+# API Configuration
+base.url=https://dummyjson.com
+logging.enabled=true
+api.timeout.ms=10000
+
+# Database Configuration
 db.url=jdbc:postgresql://localhost:5432/testdb
 db.user=postgres
 db.password=postgres
 db.driver=org.postgresql.Driver
 db.pool.size=10
 db.use.testcontainers=true
+
+# UI (Playwright) Configuration
+ui.base.url=https://www.saucedemo.com
+ui.browser=chromium
+ui.headless=true
+ui.slow.mo=0
+ui.timeout.ms=15000
+ui.tracing.enabled=true
+ui.video.enabled=false
+ui.screenshot.on.failure=true
+ui.page.source.on.failure=true
 ```
 
----
-
-## 🚀 On-Demand CI/CD Конвейеры (GitHub Actions)
-
-В проекте реализованы модульные воркфлоу, запускаемые строго **по требованию (on-demand)**:
-
-1. **`pr-checks.yml` (PR Validation & Smoke Tests)**:
-   - Срабатывает при создании/обновлении Pull Request в `main`/`master`.
-   - Запускает компиляцию и дымовые тесты (`-Dgroups="smoke"`).
-   - Формирует и публикует Markdown-сводку в GitHub Step Summary.
-2. **`regression-and-reporting.yml` (Regression Suite & Allure Reporting)**:
-   - Срабатывает при пуше в `main` или по ручному вызову (`workflow_dispatch`).
-   - Запускает полный набор тестов (API + DB с Testcontainers).
-   - Подтягивает историю предыдущих прогонов из ветки `gh-pages`, генерирует свежий Allure-отчет и деплоит его на GitHub Pages.
-3. **`manual-test-run.yml` (Parameterized On-Demand Test Run)**:
-   - Запуск вручную через интерфейс GitHub Actions с параметрами: окружение (`staging`, `dev`, `prod`), теги JUnit (`regression`, `smoke`, `db`, `products`, `users`), число потоков параллелизации и базовый URL.
-4. **`security-and-dependency-scan.yml` (Security & Dependency Audit)**:
-   - Запуск по требованию и при изменении `pom.xml` для проверки дерева зависимостей и поиска обновлений.
+Все параметры могут быть переопределены через `-Dkey=value` или системные переменные окружения.
 
 ---
 
 ## 🚀 Запуск автотестов
 
-### 1. Запуск всех тестов:
+### 1. Запуск UI тестов:
 ```bash
-mvn clean test
+# Запуск всех UI тестов
+mvn test -Dgroups="ui"
+
+# Запуск UI Smoke набора
+mvn test -Dgroups="ui & smoke"
+
+# Запуск в видимом режиме браузера (Headed mode)
+mvn test -Dgroups="ui" -Dui.headless=false
+
+# Запуск в другом браузере (Firefox / WebKit)
+mvn test -Dgroups="ui" -Dui.browser=firefox
 ```
 
-### 2. Запуск конкретного тестового класса:
+### 2. Запуск полного регрессионного набора (API + DB + UI):
 ```bash
-mvn test -Dtest=ProductCrudTest
+mvn clean test -Dgroups="regression"
 ```
 
-### 3. Запуск тестов по тегам JUnit 5:
+### 3. Запуск конкретного тестового класса:
 ```bash
-# Запуск только тестов товаров:
-mvn test -Dgroups=products
-
-# Запуск только тестов пользователей:
-mvn test -Dgroups=users
-
-# Запуск тестов базы данных (PostgreSQL / Testcontainers):
-mvn test -Dgroups=db
-
-# Запуск тестов моков и сервисной виртуализации (WireMock):
-mvn test -Dgroups=mock
-
-# Запуск регрессионного набора:
-mvn test -Dgroups=regression
-```
-
-### 4. Запуск с переопределением базового URL (например, для другого стенда / мок-сервера):
-```bash
-mvn test -Dbase.url=https://dummyjson.com
+mvn test -Dtest=CheckoutE2ETest
 ```
 
 ---
@@ -282,18 +255,20 @@ mvn test -Dbase.url=https://dummyjson.com
 ```bash
 mvn allure:report
 ```
-*Сгенерированный статический отчет будет доступен в директории `target/site/allure-maven-plugin`.*
 
-### 2. Открытие интерактивного отчета в браузере (Allure Web Server):
+### 2. Запуск локального сервера Allure для просмотра отчета:
 ```bash
 mvn allure:serve
 ```
 
 ---
 
-## 💡 Как расширять проект (Add new API)
+## 🏢 Переиспользование на Enterprise-проекте
 
-1. **Создать DTO** в пакете `org.example.api.models.<entity>` с аннотациями `@Data`, `@Builder`, `@JsonIgnoreProperties(ignoreUnknown = true)`.
-2. **Создать клиент** в пакете `org.example.api.clients`, унаследовав от `BaseClient`, с аннотациями `@Step`.
-3. **Создать Data Factory** в пакете `org.example.api.data` для удобной генерации данных через `DataFaker`.
-4. **Создать тест** в пакете `org.example.api.tests`, унаследовав от `BaseTest`, добавив Allure-аннотации (`@Epic`, `@Feature`, `@Story`, `@Severity`, `@DisplayName`).
+1. **Замена базового URL и локаторов**:
+   - В `config.properties` укажите `ui.base.url` вашего enterprise-приложения.
+   - Добавьте новые Page Objects в `org.example.ui.pages`, унаследовав от `BasePage`.
+2. **Аутентификация и Cookie/State Storage**:
+   - Playwright поддерживает сохранение состояния сессии (storage state). Вы можете использовать `context.storageState(...)` для переиспользования авторизованной сессии между тестами.
+3. **CI/CD Внедрение**:
+   - Готовые воркфлоу `.github/workflows/regression-and-reporting.yml` и `manual-test-run.yml` уже настроены на установку Playwright браузеров и генерацию Allure отчетов с публикацией в GitHub Pages и артефакты.

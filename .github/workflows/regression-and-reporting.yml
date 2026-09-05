@@ -37,7 +37,12 @@ jobs:
           java-version: '21'
           cache: 'maven'
 
-      - name: Execute Full Test Suite (API + DB)
+      - name: Install Playwright Browsers
+        run: |
+          mvn test-compile -B
+          mvn exec:java -e -D exec.mainClass=com.microsoft.playwright.CLI -D exec.args="install --with-deps chromium" || true
+
+      - name: Execute Full Test Suite (API + DB + UI)
         run: |
           TAGS="${{ github.event.inputs.tags || 'regression' }}"
           echo "Running tests with tag expression: $TAGS"
