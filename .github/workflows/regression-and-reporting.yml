@@ -31,7 +31,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Set up Java 21 (Temurin)
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: 'temurin'
           java-version: '21'
@@ -45,11 +45,13 @@ jobs:
 
       - name: Load Allure Report History from gh-pages
         if: always()
-        uses: actions/checkout@v4
-        continue-on-error: true
-        with:
-          ref: gh-pages
-          path: gh-pages-branch
+        run: |
+          if git ls-remote --heads origin gh-pages | grep -q 'refs/heads/gh-pages'; then
+            echo "Branch gh-pages found, fetching history..."
+            git clone --single-branch --branch gh-pages --depth 1 "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" gh-pages-branch || true
+          else
+            echo "Branch gh-pages does not exist yet. Skipping history load."
+          fi
 
       - name: Setup Allure History
         if: always()
@@ -80,6 +82,8 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: gh-pages
           publish_dir: target/site/allure-maven-plugin
+          user_name: 'github-actions[bot]'
+          user_email: 'github-actions[bot]@users.noreply.github.com'
           keep_files: false
 
       - name: Archive Allure Results
