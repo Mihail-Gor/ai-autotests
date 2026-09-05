@@ -74,7 +74,7 @@ jobs:
           echo "- **Tags:** \`${{ github.event.inputs.tags || 'regression' }}\`" >> $GITHUB_STEP_SUMMARY
 
       - name: Deploy Allure Report to GitHub Pages
-        if: always() && github.ref_name == 'main'
+        if: always() && (github.ref_name == 'main' || github.ref_name == 'master')
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
