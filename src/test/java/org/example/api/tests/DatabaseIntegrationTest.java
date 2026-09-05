@@ -13,6 +13,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -26,12 +28,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Tag("db")
 @Tag("regression")
 @DisplayName("PostgreSQL Database Integration Tests")
+@Execution(ExecutionMode.SAME_THREAD)
 public class DatabaseIntegrationTest extends BaseTest {
 
     @BeforeEach
     public void setupDatabaseState() {
+        dbManager.initSchema();
         dbManager.resetTables();
-        dbManager.initSchemaAndSeed();
+        dbManager.seedData();
     }
 
     @Test

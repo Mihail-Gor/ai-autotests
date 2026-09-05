@@ -80,7 +80,10 @@ public class DatabaseManager {
         hikariConfig.setMaxLifetime(600000);
         hikariConfig.setPoolName("Test-HikariCP-Pool");
 
-        return new HikariDataSource(hikariConfig);
+        HikariDataSource ds = new HikariDataSource(hikariConfig);
+        this.dataSource = ds;
+        initSchema();
+        return ds;
     }
 
     public Connection getConnection() throws SQLException {
@@ -116,14 +119,24 @@ public class DatabaseManager {
         }
     }
 
-    @Step("DB: Initialize Schema and Seed Data")
-    public void initSchemaAndSeed() {
+    @Step("DB: Initialize Schema")
+    public synchronized void initSchema() {
         executeScript("db/init-schema.sql");
+    }
+
+    @Step("DB: Seed Initial Data")
+    public synchronized void seedData() {
         executeScript("db/seed-data.sql");
     }
 
+    @Step("DB: Initialize Schema and Seed Data")
+    public synchronized void initSchemaAndSeed() {
+        initSchema();
+        seedData();
+    }
+
     @Step("DB: Reset all tables")
-    public void resetTables() {
+    public synchronized void resetTables() {
         log.info("Resetting all database tables...");
         try (Connection conn = getConnection(); Statement stmt = conn.createStatement()) {
             stmt.execute("TRUNCATE TABLE orders, products, users RESTART IDENTITY CASCADE;");
