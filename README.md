@@ -7,6 +7,7 @@
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-blue?logo=postgresql)
 ![Testcontainers](https://img.shields.io/badge/Testcontainers-1.20.1-brightgreen)
 ![WireMock](https://img.shields.io/badge/WireMock-3.9.1-red)
+![Gatling](https://img.shields.io/badge/Gatling-3.11.5-orange?logo=gatling)
 ![Allure Report](https://img.shields.io/badge/Allure-2.29.0-yellow?logo=qameta)
 ![CI/CD](https://img.shields.io/badge/GitHub_Actions-On--Demand-blue?logo=githubactions)
 
@@ -25,6 +26,10 @@
    - Полнофункциональный публичный REST-сервис с ресурсами `products` и `users`, пагинацией, поиском, валидациями и CRUD-операциями.
 3. **Database & Transaction Testing**: Изолированный контейнер **PostgreSQL 16** на базе **Testcontainers**.
 4. **Service Virtualization**: **WireMock** для эмуляции внешних шлюзов, задержек сети, сбоев 500/429 и стейт-машин.
+5. **Нагрузочные полигоны (Performance Testbeds)**:
+   - **Gatling Official Testbed** (`https://computer-database.gatling.io`) — официальный полигон Gatling для безопасного нагрузочного тестирования.
+   - **Grafana k6 Testbed** (`https://test.k6.io`) — тестовый полигон Grafana для валидации поведения под нагрузкой.
+   - **Hermetic Local Mock (WireMock)** — встроенный локальный сервер для автономных и стресс-тестов без выхода во внешнюю сеть.
 
 ---
 
@@ -34,6 +39,7 @@
 |---|---|
 | **Java 21 (LTS)** | Язык разработки |
 | **Playwright 1.49.0** | Высокопроизводительный современный движок для автоматизации браузеров (Chromium, Firefox, WebKit) |
+| **Gatling 3.11.5 (Java SDK)** | Высокопроизводительный асинхронный фреймворк нагрузочного тестирования на Java |
 | **REST Assured 5.5.0** | Клиент и библиотека для выполнения и валидации HTTP-запросов |
 | **JUnit 5 (Jupiter) 5.11.0** | Тестовый фреймворк (многопоточный параллельный запуск, параметризация, extensions) |
 | **Allure Report 2.29.0** | Интерактивные HTML-отчеты с аттачами запросов/ответов, скриншотов, HTML-исходников и Playwright Trace |
@@ -246,6 +252,41 @@ mvn clean test -Dgroups="regression"
 ```bash
 mvn test -Dtest=CheckoutE2ETest
 ```
+
+---
+
+## ⚡ Нагрузочное тестирование (Gatling Java SDK)
+
+В проект интегрирован фреймворк **Gatling 3.11+** с официальным **Java SDK / Fluent DSL**, позволяющий писать высокопроизводительные сценарии нагрузки на чистой Java 21 без использования Scala.
+
+### 🛡 Безопасность нагрузки и выбор полигона:
+1. **Почему нельзя спамить публичные рабочие API (DummyJSON)**:
+   - Бесплатные публичные API (вроде `dummyjson.com`) работают на публичной облачной инфраструктуре с защитой от DDoS (Cloudflare/Rate Limiting).
+   - Чрезмерный спам и стресс-нагрузка могут привести к блокировке по IP (HTTP `429 Too Many Requests`) и нарушению правил пользования сервисом.
+   - Поэтому симуляция `ProductsApiSimulation` настроена на **щадящий профиль нагрузки** (gentle ramp-up, паузы между запросами).
+2. **Специализированные открытые полигоны для нагрузочного тестирования**:
+   - **Gatling Official Testbed** (`https://computer-database.gatling.io`): Официальный стенд, созданный разработчиками Gatling специально для обучения, отладки и стресс-тестирования.
+   - **Grafana k6 Public Testbed** (`https://test.k6.io`): Специальный полигон от команды Grafana для нагрузочного тестирования.
+3. **Герметичное локальное нагрузочное тестирование (WireMock)**:
+   - `LocalWireMockSimulation` поднимает локальный встроенный mock-сервер, позволяя тестировать производительность, алгоритмы Gatling и CI пайплайны на 100% автономно и безопасно, без выхода в интернет.
+
+### 🏃 Команды запуска симуляций Gatling:
+
+```bash
+# 1. Запуск нагрузки на API товаров (DummyJSON) с щадящим профилем:
+mvn gatling:test -Dgatling.simulationClass=org.example.performance.simulations.ProductsApiSimulation
+
+# 2. Запуск на официальном полигоне Gatling Computer Database:
+mvn gatling:test -Dgatling.simulationClass=org.example.performance.simulations.SafeTestbedSimulation
+
+# 3. Полностью герметичный локальный запуск (WireMock Benchmark):
+mvn gatling:test -Dgatling.simulationClass=org.example.performance.simulations.LocalWireMockSimulation
+
+# 4. Переопределение параметров нагрузки (число пользователей, длительность):
+mvn gatling:test -Dgatling.simulationClass=org.example.performance.simulations.ProductsApiSimulation -Dgatling.users=10 -Dgatling.duration=20
+```
+
+После завершения прогона Gatling автоматически генерирует интерактивный HTML-отчет в директории `target/gatling/`. В CI/CD отчёты автоматически сохраняются в артефакты пайплайна `.github/workflows/performance-gatling.yml`.
 
 ---
 

@@ -1,0 +1,74 @@
+name: Performance Testing (Gatling)
+
+on:
+  workflow_dispatch:
+    inputs:
+      simulation:
+        description: 'Gatling Simulation Class to run'
+        required: true
+        default: 'org.example.performance.simulations.ProductsApiSimulation'
+        type: choice
+        options:
+          - 'org.example.performance.simulations.ProductsApiSimulation'
+          - 'org.example.performance.simulations.SafeTestbedSimulation'
+          - 'org.example.performance.simulations.LocalWireMockSimulation'
+      users:
+        description: 'Number of concurrent virtual users (ramp-up)'
+        required: false
+        default: '5'
+        type: string
+      duration:
+        description: 'Duration of test in seconds'
+        required: false
+        default: '15'
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  gatling-load-test:
+    name: Run Gatling Load Simulation
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Java 21 (Temurin)
+        uses: actions/setup-java@v5
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+          cache: 'maven'
+
+      - name: Execute Gatling Performance Test
+        run: |
+          SIMULATION="${{ github.event.inputs.simulation || 'org.example.performance.simulations.ProductsApiSimulation' }}"
+          USERS="${{ github.event.inputs.users || '5' }}"
+          DURATION="${{ github.event.inputs.duration || '15' }}"
+          
+          echo "Running Gatling simulation: $SIMULATION with $USERS users for $DURATION seconds"
+          mvn gatling:test \
+            -Dgatling.simulationClass="$SIMULATION" \
+            -Dgatling.users="$USERS" \
+            -Dgatling.duration="$DURATION" \
+            -B
+
+      - name: Publish Performance Summary
+        if: always()
+        run: |
+          echo "### 🚀 Gatling Performance Test Summary" >> $GITHUB_STEP_SUMMARY
+          echo "- **Simulation:** \`${{ github.event.inputs.simulation || 'ProductsApiSimulation' }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "- **Virtual Users:** \`${{ github.event.inputs.users || '5' }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "- **Duration:** \`${{ github.event.inputs.duration || '15' }}\` seconds" >> $GITHUB_STEP_SUMMARY
+          echo "- **Triggered by:** ${{ github.actor }}" >> $GITHUB_STEP_SUMMARY
+
+      - name: Archive Gatling HTML Reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gatling-performance-report
+          path: target/gatling/
+          retention-days: 14
