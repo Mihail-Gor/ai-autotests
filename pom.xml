@@ -28,6 +28,7 @@
         <hikaricp.version>5.1.0</hikaricp.version>
         <testcontainers.version>1.20.1</testcontainers.version>
         <wiremock.version>3.9.1</wiremock.version>
+        <playwright.version>1.49.0</playwright.version>
 
         <maven-surefire-plugin.version>3.3.1</maven-surefire-plugin.version>
         <allure-maven.version>2.12.0</allure-maven.version>
@@ -176,6 +177,13 @@
             <artifactId>wiremock</artifactId>
             <version>${wiremock.version}</version>
             <scope>test</scope>
+        </dependency>
+
+        <!-- Playwright for Modern UI Testing -->
+        <dependency>
+            <groupId>com.microsoft.playwright</groupId>
+            <artifactId>playwright</artifactId>
+            <version>${playwright.version}</version>
         </dependency>
     </dependencies>
 

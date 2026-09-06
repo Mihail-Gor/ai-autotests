@@ -1,18 +1,26 @@
 package org.example.api.tests;
 
+import io.qameta.allure.AllureId;
 import io.qameta.allure.Description;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
+import io.qameta.allure.Issue;
 import io.qameta.allure.Owner;
 import io.qameta.allure.Severity;
 import io.qameta.allure.SeverityLevel;
 import io.qameta.allure.Story;
+import io.qameta.allure.TmsLink;
 import io.restassured.response.Response;
 import org.example.api.data.ProductDataFactory;
 import org.example.api.models.common.ErrorResponseDto;
 import org.example.api.models.product.ProductDto;
 import org.example.api.models.product.ProductsResponseDto;
 import org.example.api.specifications.ResponseSpecs;
+import org.example.common.annotations.Component;
+import org.example.common.annotations.JiraIssue;
+import org.example.common.annotations.Layer;
+import org.example.common.annotations.Layers;
+import org.example.common.annotations.Microservice;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Tag;
@@ -25,6 +33,9 @@ import static org.example.api.assertions.ProductAssert.assertThatProduct;
 
 @Epic("DummyJSON E-Commerce API")
 @Feature("Products Management")
+@Layer(Layers.API)
+@Microservice("product-catalog-service")
+@Component("Products")
 @Owner("QA Automation Engineer")
 @Tag("regression")
 @Tag("products")
@@ -37,6 +48,9 @@ public class ProductCrudTest extends BaseTest {
     class CreateOperations {
 
         @Test
+        @AllureId("1001")
+        @TmsLink("TMS-1001")
+        @JiraIssue("SHOP-201")
         @Severity(SeverityLevel.BLOCKER)
         @DisplayName("POST /products/add - Successfully create product with full payload")
         @Description("Verifies that a new product can be created with all valid attributes and returns 201 Created.")
@@ -62,6 +76,9 @@ public class ProductCrudTest extends BaseTest {
                 "Wireless Gaming Mouse, 49.99",
                 "Mechanical RGB Keyboard, 129.50"
         })
+        @AllureId("1002")
+        @TmsLink("TMS-1002")
+        @JiraIssue("SHOP-201")
         @Severity(SeverityLevel.CRITICAL)
         @DisplayName("POST /products/add - Successfully create product with minimal payload (Parameterized)")
         @Description("Verifies product creation with different minimal payloads.")
@@ -87,6 +104,9 @@ public class ProductCrudTest extends BaseTest {
     class ReadOperations {
 
         @Test
+        @AllureId("1003")
+        @TmsLink("TMS-1003")
+        @JiraIssue("SHOP-202")
         @Severity(SeverityLevel.BLOCKER)
         @DisplayName("GET /products/{id} - Successfully get product by ID")
         @Description("Verifies that an existing product can be retrieved by its ID with correct attributes.")
@@ -105,6 +125,9 @@ public class ProductCrudTest extends BaseTest {
         }
 
         @Test
+        @AllureId("1004")
+        @TmsLink("TMS-1004")
+        @JiraIssue("SHOP-202")
         @Severity(SeverityLevel.CRITICAL)
         @DisplayName("GET /products - Get paginated list of products")
         @Description("Verifies retrieval of products list with limit and skip parameters.")
@@ -124,6 +147,9 @@ public class ProductCrudTest extends BaseTest {
         }
 
         @Test
+        @AllureId("1005")
+        @TmsLink("TMS-1005")
+        @JiraIssue("SHOP-202")
         @Severity(SeverityLevel.NORMAL)
         @DisplayName("GET /products/search - Search products by query")
         @Description("Verifies searching products by keyword query.")
@@ -145,6 +171,9 @@ public class ProductCrudTest extends BaseTest {
         }
 
         @Test
+        @AllureId("1006")
+        @TmsLink("TMS-1006")
+        @JiraIssue("SHOP-202")
         @Severity(SeverityLevel.NORMAL)
         @DisplayName("GET /products/{id} - Return 404 for non-existing product")
         @Description("Verifies that requesting a non-existent product ID returns HTTP 404 Not Found.")
@@ -168,6 +197,9 @@ public class ProductCrudTest extends BaseTest {
     class UpdateOperations {
 
         @Test
+        @AllureId("1007")
+        @TmsLink("TMS-1007")
+        @JiraIssue("SHOP-203")
         @Severity(SeverityLevel.CRITICAL)
         @DisplayName("PUT /products/{id} - Fully update product")
         @Description("Verifies full update of an existing product via PUT request.")
@@ -190,6 +222,9 @@ public class ProductCrudTest extends BaseTest {
         }
 
         @Test
+        @AllureId("1008")
+        @TmsLink("TMS-1008")
+        @JiraIssue("SHOP-203")
         @Severity(SeverityLevel.NORMAL)
         @DisplayName("PATCH /products/{id} - Partially update product title")
         @Description("Verifies partial update of a product attribute via PATCH request.")
@@ -214,6 +249,9 @@ public class ProductCrudTest extends BaseTest {
         }
 
         @Test
+        @AllureId("1009")
+        @TmsLink("TMS-1009")
+        @JiraIssue("SHOP-203")
         @Severity(SeverityLevel.NORMAL)
         @DisplayName("PUT /products/{id} - Return 404 when updating non-existing product")
         @Description("Verifies that updating a non-existent product ID returns 404 Not Found.")
@@ -233,6 +271,9 @@ public class ProductCrudTest extends BaseTest {
     class DeleteOperations {
 
         @Test
+        @AllureId("1010")
+        @TmsLink("TMS-1010")
+        @JiraIssue("SHOP-204")
         @Severity(SeverityLevel.CRITICAL)
         @DisplayName("DELETE /products/{id} - Successfully delete product")
         @Description("Verifies that a product can be deleted and response indicates deletion with timestamp.")
@@ -248,6 +289,9 @@ public class ProductCrudTest extends BaseTest {
         }
 
         @Test
+        @AllureId("1011")
+        @TmsLink("TMS-1011")
+        @JiraIssue("SHOP-204")
         @Severity(SeverityLevel.NORMAL)
         @DisplayName("DELETE /products/{id} - Return 404 when deleting non-existing product")
         @Description("Verifies that attempting to delete a non-existent product ID returns 404 Not Found.")

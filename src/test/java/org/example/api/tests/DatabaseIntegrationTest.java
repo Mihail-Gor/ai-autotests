@@ -1,14 +1,21 @@
 package org.example.api.tests;
 
+import io.qameta.allure.AllureId;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Owner;
 import io.qameta.allure.Severity;
 import io.qameta.allure.SeverityLevel;
 import io.qameta.allure.Story;
+import io.qameta.allure.TmsLink;
 import org.example.api.database.models.OrderRecord;
 import org.example.api.database.models.ProductRecord;
 import org.example.api.database.models.UserRecord;
+import org.example.common.annotations.Component;
+import org.example.common.annotations.JiraIssue;
+import org.example.common.annotations.Layer;
+import org.example.common.annotations.Layers;
+import org.example.common.annotations.Microservice;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -24,6 +31,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @Epic("Database Management")
 @Feature("PostgreSQL Database Integration")
+@Layer(Layers.DATABASE)
+@Microservice("data-persistence-service")
+@Component("PostgreSQL Database")
 @Owner("QA Automation Team")
 @Tag("db")
 @Tag("regression")
@@ -39,6 +49,9 @@ public class DatabaseIntegrationTest extends BaseTest {
     }
 
     @Test
+    @AllureId("1030")
+    @TmsLink("TMS-1030")
+    @JiraIssue("DATA-101")
     @Severity(SeverityLevel.BLOCKER)
     @Story("Connection & Seed Verification")
     @DisplayName("Verify Database Connectivity and Seed Data Record Counts")
@@ -53,6 +66,9 @@ public class DatabaseIntegrationTest extends BaseTest {
     }
 
     @Test
+    @AllureId("1031")
+    @TmsLink("TMS-1031")
+    @JiraIssue("DATA-102")
     @Severity(SeverityLevel.CRITICAL)
     @Story("User Entity Verification")
     @DisplayName("Query User by Username and Verify Mapped Record")
@@ -75,6 +91,9 @@ public class DatabaseIntegrationTest extends BaseTest {
     }
 
     @Test
+    @AllureId("1032")
+    @TmsLink("TMS-1032")
+    @JiraIssue("DATA-103")
     @Severity(SeverityLevel.CRITICAL)
     @Story("Product Management")
     @DisplayName("Insert New Product and Verify Query Persistence")
@@ -107,6 +126,9 @@ public class DatabaseIntegrationTest extends BaseTest {
     }
 
     @Test
+    @AllureId("1033")
+    @TmsLink("TMS-1033")
+    @JiraIssue("DATA-104")
     @Severity(SeverityLevel.NORMAL)
     @Story("User Status Management")
     @DisplayName("Update User Status and Verify Change in Database")
@@ -130,6 +152,9 @@ public class DatabaseIntegrationTest extends BaseTest {
     }
 
     @Test
+    @AllureId("1034")
+    @TmsLink("TMS-1034")
+    @JiraIssue("DATA-105")
     @Severity(SeverityLevel.NORMAL)
     @Story("Order Relational Verification")
     @DisplayName("Query User Orders and Verify Aggregate Calculations")
@@ -153,6 +178,9 @@ public class DatabaseIntegrationTest extends BaseTest {
     }
 
     @Test
+    @AllureId("1035")
+    @TmsLink("TMS-1035")
+    @JiraIssue("DATA-106")
     @Severity(SeverityLevel.CRITICAL)
     @Story("Cascade Deletion")
     @DisplayName("Delete User and Verify Cascading Order Removal")

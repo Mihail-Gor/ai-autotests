@@ -20,10 +20,25 @@ on:
         options:
           - regression
           - smoke
-          - db
-          - mock
+          - ui
           - products
           - users
+          - db
+          - mock
+      browser:
+        description: 'UI Browser (for UI tests)'
+        required: false
+        default: 'chromium'
+        type: choice
+        options:
+          - chromium
+          - firefox
+          - webkit
+      headless:
+        description: 'UI Headless Mode'
+        required: false
+        default: true
+        type: boolean
       threads:
         description: 'Parallel Test Execution Threads'
         required: false
@@ -35,9 +50,14 @@ on:
           - '4'
           - '8'
       base_url:
-        description: 'Base API URL Override (Leave empty for default)'
+        description: 'Base API URL Override'
         required: false
         default: 'https://dummyjson.com'
+        type: string
+      ui_base_url:
+        description: 'Base UI URL Override'
+        required: false
+        default: 'https://www.saucedemo.com'
         type: string
       publish_report:
         description: 'Generate Allure Report Artifact'
@@ -69,17 +89,28 @@ jobs:
           java-version: '21'
           cache: 'maven'
 
+      - name: Install Playwright Browsers
+        run: |
+          mvn test-compile -B
+          mvn exec:java -e -D exec.mainClass=com.microsoft.playwright.CLI -D exec.args="install --with-deps chromium" || true
+
       - name: Execute Targeted Tests
         run: |
           echo "Executing on-demand run:"
           echo "  - Environment: ${{ inputs.environment }}"
           echo "  - Tags: ${{ inputs.test_tags }}"
           echo "  - Threads: ${{ inputs.threads }}"
-          echo "  - Base URL: ${{ inputs.base_url }}"
+          echo "  - Base API URL: ${{ inputs.base_url }}"
+          echo "  - Base UI URL: ${{ inputs.ui_base_url }}"
+          echo "  - Browser: ${{ inputs.browser }}"
+          echo "  - Headless: ${{ inputs.headless }}"
           
           mvn clean test -B \
             -Dgroups="${{ inputs.test_tags }}" \
             -Dbase.url="${{ inputs.base_url }}" \
+            -Dui.base.url="${{ inputs.ui_base_url }}" \
+            -Dui.browser="${{ inputs.browser }}" \
+            -Dui.headless="${{ inputs.headless }}" \
             -Djunit.jupiter.execution.parallel.config.fixed.parallelism="${{ inputs.threads }}"
 
       - name: Generate Allure Report
@@ -93,7 +124,9 @@ jobs:
           echo "- **Triggered by:** @${{ github.actor }}" >> $GITHUB_STEP_SUMMARY
           echo "- **Environment:** \`${{ inputs.environment }}\`" >> $GITHUB_STEP_SUMMARY
           echo "- **Tag Filter:** \`${{ inputs.test_tags }}\`" >> $GITHUB_STEP_SUMMARY
-          echo "- **Base URL:** \`${{ inputs.base_url }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "- **Base API URL:** \`${{ inputs.base_url }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "- **Base UI URL:** \`${{ inputs.ui_base_url }}\`" >> $GITHUB_STEP_SUMMARY
+          echo "- **Browser:** \`${{ inputs.browser }}\` (headless: \`${{ inputs.headless }}\`)" >> $GITHUB_STEP_SUMMARY
           echo "- **Threads:** \`${{ inputs.threads }}\`" >> $GITHUB_STEP_SUMMARY
 
       - name: Archive Test Results
