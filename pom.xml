@@ -29,6 +29,8 @@
         <testcontainers.version>1.20.1</testcontainers.version>
         <wiremock.version>3.9.1</wiremock.version>
         <playwright.version>1.49.0</playwright.version>
+        <gatling.version>3.11.5</gatling.version>
+        <gatling-maven-plugin.version>4.9.6</gatling-maven-plugin.version>
 
         <maven-surefire-plugin.version>3.3.1</maven-surefire-plugin.version>
         <allure-maven.version>2.12.0</allure-maven.version>
@@ -185,6 +187,14 @@
             <artifactId>playwright</artifactId>
             <version>${playwright.version}</version>
         </dependency>
+
+        <!-- Gatling Load Testing (Java SDK) -->
+        <dependency>
+            <groupId>io.gatling.highcharts</groupId>
+            <artifactId>gatling-charts-highcharts</artifactId>
+            <version>${gatling.version}</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -238,6 +248,12 @@
                     <reportVersion>${allure.version}</reportVersion>
                     <resultsDirectory>${project.build.directory}/allure-results</resultsDirectory>
                 </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>io.gatling</groupId>
+                <artifactId>gatling-maven-plugin</artifactId>
+                <version>${gatling-maven-plugin.version}</version>
             </plugin>
         </plugins>
     </build>
