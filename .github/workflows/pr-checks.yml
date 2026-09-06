@@ -33,11 +33,11 @@ jobs:
       - name: Compile and Verify Sources
         run: mvn clean test-compile -B
 
-      - name: Install Playwright Browsers
-        run: mvn exec:java -e -D exec.mainClass=com.microsoft.playwright.CLI -D exec.args="install --with-deps chromium" || true
+      - name: Install Playwright Browsers and Dependencies
+        run: mvn exec:java -e -D exec.mainClass=com.microsoft.playwright.CLI -D exec.args="install --with-deps chromium"
 
       - name: Execute Smoke Test Suite
-        run: mvn test -B -Dgroups="smoke"
+        run: mvn test -B -Dgroups="smoke" -Dui.headless=true
 
       - name: Publish Test Summary
         if: always()

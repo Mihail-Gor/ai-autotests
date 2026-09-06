@@ -37,16 +37,16 @@ jobs:
           java-version: '21'
           cache: 'maven'
 
-      - name: Install Playwright Browsers
+      - name: Install Playwright Browsers and Dependencies
         run: |
           mvn test-compile -B
-          mvn exec:java -e -D exec.mainClass=com.microsoft.playwright.CLI -D exec.args="install --with-deps chromium" || true
+          mvn exec:java -e -D exec.mainClass=com.microsoft.playwright.CLI -D exec.args="install --with-deps chromium"
 
       - name: Execute Full Test Suite (API + DB + UI)
         run: |
           TAGS="${{ github.event.inputs.tags || 'regression' }}"
           echo "Running tests with tag expression: $TAGS"
-          mvn clean test -B -Dgroups="$TAGS"
+          mvn clean test -B -Dgroups="$TAGS" -Dui.headless=true
 
       - name: Load Allure Report History from gh-pages
         if: always()
