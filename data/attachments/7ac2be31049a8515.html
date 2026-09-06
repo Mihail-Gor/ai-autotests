@@ -1,0 +1,79 @@
+<div>POST to https://dummyjson.com/users/add</div>
+
+    <h4>Body</h4>
+    <div>
+    <pre class="preformated-text">
+{
+    &quot;firstName&quot;: &quot;Louie&quot;,
+    &quot;lastName&quot;: &quot;Collier&quot;,
+    &quot;maidenName&quot;: &quot;Mertz&quot;,
+    &quot;age&quot;: 22,
+    &quot;gender&quot;: &quot;Male&quot;,
+    &quot;email&quot;: &quot;cruz.stanton@yahoo.com&quot;,
+    &quot;phone&quot;: &quot;(505) 644-6555&quot;,
+    &quot;username&quot;: &quot;lorie.marks&quot;,
+    &quot;password&quot;: &quot;8wd65pl7*6C!05&quot;,
+    &quot;birthDate&quot;: &quot;1995-06-15&quot;,
+    &quot;bloodGroup&quot;: &quot;A+&quot;,
+    &quot;height&quot;: 198.32,
+    &quot;weight&quot;: 57.27,
+    &quot;eyeColor&quot;: &quot;fuchsia&quot;,
+    &quot;address&quot;: {
+        &quot;address&quot;: &quot;54054 Collier Drive&quot;,
+        &quot;city&quot;: &quot;South Morganchester&quot;,
+        &quot;state&quot;: &quot;Pennsylvania&quot;,
+        &quot;stateCode&quot;: &quot;FL&quot;,
+        &quot;postalCode&quot;: &quot;90037&quot;,
+        &quot;country&quot;: &quot;United States&quot;
+    },
+    &quot;company&quot;: {
+        &quot;department&quot;: &quot;teacher&quot;,
+        &quot;name&quot;: &quot;Romaguera and Sons&quot;,
+        &quot;title&quot;: &quot;National Government Administrator&quot;
+    },
+    &quot;role&quot;: &quot;user&quot;
+}    </pre>
+    </div>
+
+    <h4>Headers</h4>
+    <div>
+            <div>Accept: application/json, application/javascript, text/javascript, text/json</div>
+            <div>Content-Type: application/json</div>
+    </div>
+
+
+
+    <h4>Curl</h4>
+    <div>
+        curl -v -X POST &#39;https://dummyjson.com/users/add&#39; -H &#39;Accept: application/json, application/javascript, text/javascript, text/json&#39; -H &#39;Content-Type: application/json&#39; -d &#39;{
+    &quot;firstName&quot;: &quot;Louie&quot;,
+    &quot;lastName&quot;: &quot;Collier&quot;,
+    &quot;maidenName&quot;: &quot;Mertz&quot;,
+    &quot;age&quot;: 22,
+    &quot;gender&quot;: &quot;Male&quot;,
+    &quot;email&quot;: &quot;cruz.stanton@yahoo.com&quot;,
+    &quot;phone&quot;: &quot;(505) 644-6555&quot;,
+    &quot;username&quot;: &quot;lorie.marks&quot;,
+    &quot;password&quot;: &quot;8wd65pl7*6C!05&quot;,
+    &quot;birthDate&quot;: &quot;1995-06-15&quot;,
+    &quot;bloodGroup&quot;: &quot;A+&quot;,
+    &quot;height&quot;: 198.32,
+    &quot;weight&quot;: 57.27,
+    &quot;eyeColor&quot;: &quot;fuchsia&quot;,
+    &quot;address&quot;: {
+        &quot;address&quot;: &quot;54054 Collier Drive&quot;,
+        &quot;city&quot;: &quot;South Morganchester&quot;,
+        &quot;state&quot;: &quot;Pennsylvania&quot;,
+        &quot;stateCode&quot;: &quot;FL&quot;,
+        &quot;postalCode&quot;: &quot;90037&quot;,
+        &quot;country&quot;: &quot;United States&quot;
+    },
+    &quot;company&quot;: {
+        &quot;department&quot;: &quot;teacher&quot;,
+        &quot;name&quot;: &quot;Romaguera and Sons&quot;,
+        &quot;title&quot;: &quot;National Government Administrator&quot;
+    },
+    &quot;role&quot;: &quot;user&quot;
+}&#39;
+    </div>
+
