@@ -1,0 +1,79 @@
+<div>POST to https://dummyjson.com/users/add</div>
+
+    <h4>Body</h4>
+    <div>
+    <pre class="preformated-text">
+{
+    &quot;firstName&quot;: &quot;Marcia&quot;,
+    &quot;lastName&quot;: &quot;Spinka&quot;,
+    &quot;maidenName&quot;: &quot;Tillman&quot;,
+    &quot;age&quot;: 49,
+    &quot;gender&quot;: &quot;Female&quot;,
+    &quot;email&quot;: &quot;bernard.koss@gmail.com&quot;,
+    &quot;phone&quot;: &quot;(505) 644-4431&quot;,
+    &quot;username&quot;: &quot;hoyt.luettgen&quot;,
+    &quot;password&quot;: &quot;1eNu^K2k0*gaTA#@&quot;,
+    &quot;birthDate&quot;: &quot;1995-06-15&quot;,
+    &quot;bloodGroup&quot;: &quot;A+&quot;,
+    &quot;height&quot;: 175.78,
+    &quot;weight&quot;: 98.87,
+    &quot;eyeColor&quot;: &quot;cyan&quot;,
+    &quot;address&quot;: {
+        &quot;address&quot;: &quot;356 Blaine Port&quot;,
+        &quot;city&quot;: &quot;Lake Warrenland&quot;,
+        &quot;state&quot;: &quot;Hawaii&quot;,
+        &quot;stateCode&quot;: &quot;AK&quot;,
+        &quot;postalCode&quot;: &quot;90949&quot;,
+        &quot;country&quot;: &quot;United States&quot;
+    },
+    &quot;company&quot;: {
+        &quot;department&quot;: &quot;artist&quot;,
+        &quot;name&quot;: &quot;Berge, Rutherford and Feil&quot;,
+        &quot;title&quot;: &quot;Education Developer&quot;
+    },
+    &quot;role&quot;: &quot;user&quot;
+}    </pre>
+    </div>
+
+    <h4>Headers</h4>
+    <div>
+            <div>Accept: application/json, application/javascript, text/javascript, text/json</div>
+            <div>Content-Type: application/json</div>
+    </div>
+
+
+
+    <h4>Curl</h4>
+    <div>
+        curl -v -X POST &#39;https://dummyjson.com/users/add&#39; -H &#39;Accept: application/json, application/javascript, text/javascript, text/json&#39; -H &#39;Content-Type: application/json&#39; -d &#39;{
+    &quot;firstName&quot;: &quot;Marcia&quot;,
+    &quot;lastName&quot;: &quot;Spinka&quot;,
+    &quot;maidenName&quot;: &quot;Tillman&quot;,
+    &quot;age&quot;: 49,
+    &quot;gender&quot;: &quot;Female&quot;,
+    &quot;email&quot;: &quot;bernard.koss@gmail.com&quot;,
+    &quot;phone&quot;: &quot;(505) 644-4431&quot;,
+    &quot;username&quot;: &quot;hoyt.luettgen&quot;,
+    &quot;password&quot;: &quot;1eNu^K2k0*gaTA#@&quot;,
+    &quot;birthDate&quot;: &quot;1995-06-15&quot;,
+    &quot;bloodGroup&quot;: &quot;A+&quot;,
+    &quot;height&quot;: 175.78,
+    &quot;weight&quot;: 98.87,
+    &quot;eyeColor&quot;: &quot;cyan&quot;,
+    &quot;address&quot;: {
+        &quot;address&quot;: &quot;356 Blaine Port&quot;,
+        &quot;city&quot;: &quot;Lake Warrenland&quot;,
+        &quot;state&quot;: &quot;Hawaii&quot;,
+        &quot;stateCode&quot;: &quot;AK&quot;,
+        &quot;postalCode&quot;: &quot;90949&quot;,
+        &quot;country&quot;: &quot;United States&quot;
+    },
+    &quot;company&quot;: {
+        &quot;department&quot;: &quot;artist&quot;,
+        &quot;name&quot;: &quot;Berge, Rutherford and Feil&quot;,
+        &quot;title&quot;: &quot;Education Developer&quot;
+    },
+    &quot;role&quot;: &quot;user&quot;
+}&#39;
+    </div>
+
